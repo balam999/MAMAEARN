@@ -1,0 +1,1404 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAMA EARN - ইনকাম অ্যাপ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Hind Siliguri', 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .btn-green-shine {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+        }
+        .btn-green-shine::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 35%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg);
+            animation: shineSweep 2.5s infinite ease-in-out;
+        }
+        @keyframes shineSweep {
+            0% { left: -60%; }
+            45% { left: 130%; }
+            100% { left: 130%; }
+        }
+        .btn-green-shine:active {
+            transform: scale(0.96);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .glass-modal {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.35s ease-out forwards;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex justify-center min-h-screen bg-slate-200">
+
+    <!-- মোবাইল অ্যাপ কন্টেইনার -->
+    <div id="app-shell" class="w-full max-w-[440px] bg-white min-h-screen shadow-2xl relative flex flex-col overflow-x-hidden">
+
+        <!-- ==================== টেলিগ্রাম ও নোটিশ পপআপ (অ্যাপে ঢোকার সাথে সাথে) ==================== -->
+        <div id="telegram-notice-modal" class="hidden fixed inset-0 z-[110] glass-modal flex items-center justify-center p-5">
+            <div class="glass-card w-full max-w-[370px] rounded-3xl p-6 text-center shadow-2xl border-2 border-green-400 animate-fade-up relative">
+                <button type="button" onclick="closeTelegramModal()" class="absolute top-4 right-4 bg-gray-100 hover:bg-red-500 hover:text-white text-gray-700 w-8 h-8 rounded-full font-bold flex items-center justify-center transition">✕</button>
+                <div class="w-16 h-16 bg-blue-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <i data-lucide="send" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-extrabold text-green-900">জরুরি নোটিশ ও আপডেট!</h3>
+                <p id="popup-notice-text" class="text-xs text-gray-600 mt-2 leading-relaxed">
+                    মামাবাড়িতে স্বাগতম! পেমেন্ট প্রুফ এবং সকল আপডেট পেতে অবশ্যই আমাদের অফিসিয়াল টেলিগ্রাম চ্যানেলে জয়েন করুন।
+                </p>
+                <a id="telegram-link-btn" href="https://t.me/mamaearnsupport" target="_blank" class="btn-green-shine w-full text-white font-bold py-3 rounded-2xl mt-5 shadow-lg flex items-center justify-center space-x-2 text-sm">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>টেলিগ্রামে জয়েন করুন</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ==================== প্রথম রেজিস্ট্রেশন বোনাস পপআপ (৳৫০) ==================== -->
+        <div id="signup-bonus-modal" class="hidden fixed inset-0 z-[120] glass-modal flex items-center justify-center p-5">
+            <div class="glass-card w-full max-w-[370px] rounded-3xl p-6 text-center shadow-2xl border-2 border-yellow-400 animate-fade-up">
+                <div class="w-20 h-20 bg-yellow-400 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-xl animate-bounce">
+                    <i data-lucide="gift" class="w-10 h-10 text-green-900"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold text-green-900">অভিনন্দন!</h3>
+                <p class="text-xs text-gray-700 mt-2 leading-relaxed">
+                    আপনি সফলভাবে একাউন্ট রেজিস্টার করেছেন এবং প্রথম রেজিস্ট্রেশন বোনাস হিসেবে <b class="text-green-700 text-sm">৳৫০.০০</b> পেয়েছেন!
+                </p>
+                <button type="button" onclick="closeSignupBonusModal()" class="btn-green-shine w-full text-white font-bold py-3.5 rounded-2xl mt-5 shadow-lg text-sm">
+                    টাকা বুঝে নিন (Claim)
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== ব্যানড ইউজার স্ক্রিন ==================== -->
+        <div id="banned-screen" class="hidden fixed inset-0 z-[100] bg-gradient-to-b from-red-700 to-red-950 text-white flex flex-col items-center justify-center p-6 text-center max-w-[440px] mx-auto">
+            <div class="w-24 h-24 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center mb-5 border-2 border-red-300 animate-bounce">
+                <i data-lucide="shield-ban" class="w-14 h-14 text-red-200"></i>
+            </div>
+            <h1 class="text-3xl font-extrabold tracking-wide text-white">Your ID is Banned!</h1>
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-5 mt-4 shadow-xl">
+                <p class="text-base font-bold text-red-100 leading-relaxed">
+                    ইউর আইডি ব্যানড! আপনি আর ইনকাম করতে পারবেন না। আপনি অনেক নিয়ম লঙ্ঘন করেছেন।
+                </p>
+                <p class="text-xs text-red-200 mt-3">বিস্তারিত জানতে অ্যাডমিন সাপোর্টে যোগাযোগ করুন।</p>
+            </div>
+            <button type="button" onclick="logoutUser()" class="mt-8 bg-white text-red-800 font-extrabold px-8 py-3 rounded-2xl shadow-lg text-sm">
+                অন্য একাউন্টে লগইন করুন
+            </button>
+        </div>
+
+        <!-- ==================== ১. লগইন ও রেজিস্টার স্ক্রিন ==================== -->
+        <div id="auth-screen" class="min-h-screen flex flex-col justify-between bg-gradient-to-b from-green-600 via-green-700 to-emerald-900 p-5 text-white">
+            <div class="pt-3 text-center animate-fade-up">
+                <div class="w-20 h-20 mx-auto bg-white rounded-3xl p-1.5 shadow-xl border-2 border-green-300 mb-2 overflow-hidden">
+                    <img src="https://i.ibb.co.com/kgwJdrnY/20261113-113802.png" onerror="this.src='https://placehold.co/100x100/16a34a/ffffff?text=MAMA'" alt="MAMA EARN Logo" class="w-full h-full object-cover rounded-2xl">
+                </div>
+                <h1 id="auth-app-name" class="text-2xl font-extrabold tracking-wide">MAMA EARN</h1>
+                <p class="text-green-100 text-xs mt-0.5">মামাবাড়ির আদরে প্রতিদিন সহজ ইনকাম!</p>
+            </div>
+
+            <!-- গ্লাস ফর্ম কার্ড -->
+            <div class="glass-card rounded-3xl p-5 text-gray-800 shadow-2xl my-3 animate-fade-up">
+                <div class="grid grid-cols-2 gap-2 bg-green-50 p-1.5 rounded-2xl mb-4 border border-green-100">
+                    <button type="button" id="tab-login-btn" onclick="switchAuthTab('login')" class="btn-green-shine text-white py-2.5 rounded-xl font-bold text-sm shadow">
+                        লগইন
+                    </button>
+                    <button type="button" id="tab-register-btn" onclick="switchAuthTab('register')" class="text-green-700 py-2.5 rounded-xl font-bold text-sm transition">
+                        রেজিস্টার
+                    </button>
+                </div>
+
+                <!-- লগইন ফর্ম -->
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-600 ml-1">ইমেইল অ্যাড্রেস</label>
+                        <div class="relative mt-1">
+                            <i data-lucide="mail" class="w-4 h-4 text-green-600 absolute left-3.5 top-3.5"></i>
+                            <input type="email" id="login-email" required placeholder="আপনার ইমেইল লিখুন" class="w-full pl-10 pr-4 py-3 bg-white border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-600 ml-1">পাসওয়ার্ড</label>
+                        <div class="relative mt-1">
+                            <i data-lucide="lock" class="w-4 h-4 text-green-600 absolute left-3.5 top-3.5"></i>
+                            <input type="password" id="login-pass" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-white border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-green-shine w-full text-white font-bold py-3.5 rounded-xl shadow-lg shadow-green-600/30 mt-2">
+                        একাউন্টে প্রবেশ করুন
+                    </button>
+                </form>
+
+                <!-- রেজিস্টার ফর্ম -->
+                <form id="register-form" onsubmit="handleRegister(event)" class="space-y-3 hidden">
+                    <div class="flex flex-col items-center">
+                        <label for="reg-photo-input" class="cursor-pointer group relative">
+                            <div class="w-16 h-16 rounded-2xl bg-green-50 border-2 border-dashed border-green-500 flex items-center justify-center overflow-hidden shadow-sm">
+                                <img id="reg-photo-preview" src="https://placehold.co/100x100/dcfce7/16a34a?text=+ছবি" alt="Preview" class="w-full h-full object-cover">
+                            </div>
+                            <span class="absolute -bottom-1 -right-1 bg-green-600 text-white p-1 rounded-lg shadow">
+                                <i data-lucide="camera" class="w-3 h-3"></i>
+                            </span>
+                        </label>
+                        <input type="file" id="reg-photo-input" accept="image/*" onchange="previewProfilePhoto(event)" class="hidden">
+                        <span class="text-[11px] font-bold text-green-700 mt-1">প্রোফাইল পিকচার দিন (বাধ্যতামূলক)*</span>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-600 ml-1">আপনার পূর্ণ নাম</label>
+                        <div class="relative mt-1">
+                            <i data-lucide="user" class="w-4 h-4 text-green-600 absolute left-3.5 top-3"></i>
+                            <input type="text" id="reg-name" required placeholder="যেমন: তানভীর আহমেদ" class="w-full pl-10 pr-4 py-2.5 bg-white border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs font-bold text-gray-600 ml-1">মোবাইল নাম্বার</label>
+                            <input type="tel" id="reg-phone" required placeholder="017XXXXXXXX" class="w-full px-3 py-2.5 mt-1 bg-white border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-600 ml-1">ইমেইল অ্যাড্রেস</label>
+                            <input type="email" id="reg-email" required placeholder="mail@gmail.com" class="w-full px-3 py-2.5 mt-1 bg-white border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs font-bold text-gray-600 ml-1">পাসওয়ার্ড</label>
+                            <input type="password" id="reg-pass" required placeholder="পাসওয়ার্ড" class="w-full px-3 py-2.5 mt-1 bg-white border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-600 ml-1">৪ সংখ্যার পিন</label>
+                            <input type="password" id="reg-pin" maxlength="4" pattern="\d{4}" required placeholder="যেমন: 1234" class="w-full px-3 py-2.5 mt-1 bg-white border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center ml-1">
+                            <label class="text-xs font-bold text-gray-600">৭ সংখ্যার রেফার আইডি / লিংক</label>
+                            <button type="button" onclick="clearReferInput()" class="text-[11px] text-red-500 font-semibold hover:underline">কেটে নতুন বসান</button>
+                        </div>
+                        <div class="relative mt-1">
+                            <i data-lucide="link" class="w-4 h-4 text-green-600 absolute left-3.5 top-3"></i>
+                            <input type="text" id="reg-refer" placeholder="যেমন: 1234567 বা রেফার লিংক" class="w-full pl-10 pr-4 py-2 bg-green-50/70 border border-green-300 rounded-xl text-xs font-medium text-green-800 focus:outline-none focus:border-green-600">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-green-shine w-full text-white font-bold py-3.5 rounded-xl shadow-lg shadow-green-600/30 mt-1">
+                        নতুন একাউন্ট তৈরি করুন
+                    </button>
+                </form>
+            </div>
+
+            <!-- স্ট্যাটাস ফুটার -->
+            <div class="text-center pb-1">
+                <div class="text-[11px] bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 inline-flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
+                    <span>Secure Cloud Connected</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ২. মেইন অ্যাপ ড্যাশবোর্ড ==================== -->
+        <div id="main-app" class="hidden flex-1 flex flex-col pb-24 animate-fade-up">
+            
+            <!-- হোম পেজ সেকশন -->
+            <div id="page-home" class="app-page">
+                <header class="bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 text-white pt-5 pb-16 px-5 rounded-b-[34px] shadow-lg relative">
+                    <div class="flex items-center justify-between bg-black/15 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/15 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <img src="https://i.ibb.co.com/kgwJdrnY/20261113-113802.png" class="w-6 h-6 rounded-lg bg-white p-0.5 object-cover">
+                            <span id="header-app-name" class="text-xs font-extrabold tracking-wider">MAMA EARN</span>
+                        </div>
+                        <span id="display-user-id" class="text-[11px] font-mono bg-white/20 px-2.5 py-0.5 rounded-full font-bold text-yellow-200">ID: 0000000</span>
+                    </div>
+
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-2xl bg-white p-0.5 shadow-md overflow-hidden ring-2 ring-green-300">
+                                <img id="user-avatar" src="https://i.ibb.co.com/kgwJdrnY/20261113-113802.png" alt="Avatar" class="w-full h-full object-cover rounded-xl">
+                            </div>
+                            <div>
+                                <p class="text-green-200 text-[11px] font-medium">নানাবাড়ির সদস্য • <span id="display-user-phone">01700000000</span></p>
+                                <h2 id="display-user-name" class="font-extrabold text-lg leading-tight">তানভীর আহমেদ</h2>
+                            </div>
+                        </div>
+                        <button type="button" onclick="navigateTo('settings')" class="bg-white/15 hover:bg-white/25 backdrop-blur-md p-2.5 rounded-2xl border border-white/20 transition">
+                            <i data-lucide="settings" class="w-5 h-5 text-white"></i>
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="text-green-100 text-xs font-medium">আপনার মোট ব্যালেন্স</p>
+                        <div class="flex items-center justify-center space-x-1 mt-0.5">
+                            <span class="text-2xl font-bold text-green-200">৳</span>
+                            <span id="display-balance" class="text-4xl font-extrabold tracking-tight">0.00</span>
+                        </div>
+                        <div class="mt-2.5 inline-flex items-center space-x-3 bg-black/15 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs text-green-50 border border-white/10">
+                            <span>আজকের অ্যাড: <b id="today-ads-count">0</b>/<b id="max-ads-limit">20</b></span>
+                            <span>•</span>
+                            <span>রেফার আয়: ৳<b id="display-refer-earn">0.00</b></span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="px-5 -mt-9 relative z-10">
+                    <div class="glass-card rounded-2xl p-3.5 shadow-xl border border-green-100 grid grid-cols-2 gap-3">
+                        <button type="button" onclick="navigateTo('withdraw')" class="btn-green-shine text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md shadow-green-600/25">
+                            <i data-lucide="wallet" class="w-4 h-4"></i>
+                            <span>টাকা তুলুন</span>
+                        </button>
+                        <button type="button" onclick="openAdViewer()" class="btn-green-shine text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md shadow-green-600/25">
+                            <i data-lucide="play-circle" class="w-4 h-4"></i>
+                            <span>অ্যাড দেখুন</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="px-5 mt-5">
+                    <div class="bg-green-50 border border-green-200 rounded-2xl p-3.5 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-green-600 text-white flex items-center justify-center shrink-0 shadow">
+                            <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                        </div>
+                        <p id="app-notice-text" class="text-xs text-green-900 font-medium leading-relaxed">
+                            মামাবাড়িতে স্বাগতম! প্রতিদিন স্মার্ট অ্যাড দেখে এবং বন্ধুদের রেফার করে আনলিমিটেড ইনকাম করুন।
+                        </p>
+                    </div>
+                </div>
+
+                <div class="px-5 mt-5">
+                    <h3 class="font-bold text-gray-800 text-base mb-3 flex items-center">
+                        <span class="w-1.5 h-5 bg-green-600 rounded-full mr-2"></span>
+                        ইনকাম ফিচারসমূহ
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3.5">
+                        <div class="bg-white border border-green-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                            <div>
+                                <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center mb-2.5">
+                                    <i data-lucide="tv" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 text-sm">স্মার্ট অ্যাডস</h4>
+                                <p class="text-[11px] text-gray-500 mt-0.5">প্রতি অ্যাডে <b class="text-green-600">৳<span id="card-ad-rate">2.50</span></b></p>
+                            </div>
+                            <button type="button" onclick="openAdViewer()" class="btn-green-shine w-full text-white text-xs font-bold py-2.5 rounded-xl mt-3.5 shadow">
+                                অ্যাড দেখুন
+                            </button>
+                        </div>
+
+                        <div class="bg-white border border-green-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                            <div>
+                                <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center mb-2.5">
+                                    <i data-lucide="disc" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 text-sm">লাকি স্পিন</h4>
+                                <p class="text-[11px] text-gray-500 mt-0.5">চাকা ঘুরিয়ে বোনাস জিতুন</p>
+                            </div>
+                            <button type="button" onclick="navigateTo('spin')" class="btn-green-shine w-full text-white text-xs font-bold py-2.5 rounded-xl mt-3.5 shadow">
+                                স্পিন করুন
+                            </button>
+                        </div>
+
+                        <div class="bg-white border border-green-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                            <div>
+                                <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center mb-2.5">
+                                    <i data-lucide="users" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 text-sm">রেফার ও আয়</h4>
+                                <p class="text-[11px] text-gray-500 mt-0.5">প্রতি রেফারে <b class="text-green-600">৳<span id="card-refer-rate">25.00</span></b></p>
+                            </div>
+                            <button type="button" onclick="navigateTo('refer')" class="btn-green-shine w-full text-white text-xs font-bold py-2.5 rounded-xl mt-3.5 shadow">
+                                রেফার লিংক
+                            </button>
+                        </div>
+
+                        <div class="bg-white border border-green-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                            <div>
+                                <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center mb-2.5">
+                                    <i data-lucide="history" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 text-sm">আয়ের হিস্ট্রি</h4>
+                                <p class="text-[11px] text-gray-500 mt-0.5">সব লেনদেন ও কাজের রেকর্ড</p>
+                            </div>
+                            <button type="button" onclick="navigateTo('history')" class="btn-green-shine w-full text-white text-xs font-bold py-2.5 rounded-xl mt-3.5 shadow">
+                                হিস্ট্রি দেখুন
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== লাকি স্পিন হুইল পেজ ==================== -->
+            <div id="page-spin" class="app-page hidden p-5 animate-fade-up">
+                <div class="flex items-center space-x-3 mb-5">
+                    <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-lg font-bold text-gray-800">লাকি স্পিন হুইল</h2>
+                </div>
+
+                <div class="bg-gradient-to-b from-green-50 to-white border border-green-200 rounded-3xl p-6 text-center shadow-md">
+                    <div class="relative w-64 h-64 mx-auto my-3">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[22px] border-t-red-600 drop-shadow"></div>
+                        <canvas id="spin-canvas" width="260" height="260" class="w-full h-full rounded-full shadow-xl border-4 border-green-600 transition-transform duration-[4000ms] ease-out"></canvas>
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-12 h-12 rounded-full bg-white border-4 border-green-600 shadow-lg flex items-center justify-center font-extrabold text-green-700 text-xs">
+                                MAMA
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-gray-500 mt-4">আজকের বাকি স্পিন: <b id="remaining-spins" class="text-green-700">10</b> টি</p>
+
+                    <button type="button" id="spin-now-btn" onclick="startSpin()" class="btn-green-shine w-full text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-green-600/30 mt-5 text-base">
+                        চাকা ঘোরান (SPIN NOW)
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==================== রেফার টু আর্ন পেজ ==================== -->
+            <div id="page-refer" class="app-page hidden p-5 animate-fade-up">
+                <div class="flex items-center space-x-3 mb-5">
+                    <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-lg font-bold text-gray-800">রেফার করে আয় করুন</h2>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-600 to-emerald-800 text-white rounded-3xl p-6 text-center shadow-xl">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="gift" class="w-9 h-9 text-yellow-300"></i>
+                    </div>
+                    <h3 class="text-xl font-extrabold">বন্ধুদের আমন্ত্রণ জানান!</h3>
+                    <p class="text-xs text-green-100 mt-1">আপনার ৭ সংখ্যার রেফার আইডি বা লিংকে কেউ একাউন্ট খুললেই পাবেন <b class="text-yellow-300">৳<span id="refer-page-bonus">25.00</span></b> বোনাস!</p>
+
+                    <!-- ৭ সংখ্যার রেফার আইডি ডিসপ্লে -->
+                    <div class="mt-4 bg-white/15 backdrop-blur-md p-3 rounded-2xl border border-white/25 flex items-center justify-between">
+                        <div class="text-left">
+                            <p class="text-[10px] text-green-100">আপনার ৭ সংখ্যার রেফার আইডি:</p>
+                            <p id="display-refer-id-code" class="text-lg font-mono font-extrabold text-yellow-300">1234567</p>
+                        </div>
+                        <button type="button" onclick="copyReferIdOnly()" class="btn-green-shine text-white text-xs font-bold px-3.5 py-2 rounded-xl">আইডি কপি</button>
+                    </div>
+
+                    <div class="mt-3 bg-white/15 backdrop-blur-md p-3 rounded-2xl border border-white/25 text-left">
+                        <p class="text-[11px] text-green-100 mb-1">আপনার অটো-জেনারেটেড রেফার লিংক:</p>
+                        <div class="flex items-center justify-between bg-white text-gray-800 px-3 py-2.5 rounded-xl">
+                            <input type="text" id="my-referral-link" readonly class="text-xs font-semibold w-full bg-transparent focus:outline-none text-green-800 pr-2">
+                            <button type="button" onclick="copyReferralLink()" class="btn-green-shine text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shrink-0">
+                                লিংক কপি
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mt-5">
+                        <div class="bg-white/10 rounded-2xl p-3">
+                            <p class="text-xs text-green-100">মোট রেফার</p>
+                            <p id="total-refer-count" class="text-2xl font-extrabold mt-0.5">0</p>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-3">
+                            <p class="text-xs text-green-100">রেফার ইনকাম</p>
+                            <p class="text-2xl font-extrabold mt-0.5">৳<span id="total-refer-income">0.00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== উইথড্র পেজ ==================== -->
+            <div id="page-withdraw" class="app-page hidden p-5 animate-fade-up">
+                <div class="flex items-center space-x-3 mb-5">
+                    <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-lg font-bold text-gray-800">টাকা উত্তোলন (Withdraw)</h2>
+                </div>
+
+                <div class="bg-green-600 text-white rounded-2xl p-4 mb-5 flex items-center justify-between shadow-md">
+                    <div>
+                        <p class="text-xs text-green-100">উত্তোলনযোগ্য ব্যালেন্স</p>
+                        <p class="text-2xl font-extrabold">৳ <span id="withdraw-bal-display">0.00</span></p>
+                    </div>
+                    <div class="text-right text-xs text-green-100">
+                        <p>সর্বনিম্ন উইথড্র</p>
+                        <p class="font-bold text-white text-sm">৳ <span id="min-withdraw-display">100</span></p>
+                    </div>
+                </div>
+
+                <form onsubmit="handleWithdrawSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-700">পেমেন্ট মেথড নির্বাচন করুন</label>
+                        <div id="payment-methods-container" class="grid grid-cols-2 gap-2.5 mt-1.5"></div>
+                        <input type="hidden" id="selected-method" required>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-700">একাউন্ট নম্বর (বিকাশ / নগদ / রকেট)</label>
+                        <input type="tel" id="wd-number" required placeholder="01XXXXXXXXX" class="w-full mt-1 px-4 py-3 bg-green-50/50 border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-700">ইমেইল অ্যাড্রেস</label>
+                        <input type="email" id="wd-email" required placeholder="আপনার ইমেইল লিখুন" class="w-full mt-1 px-4 py-3 bg-green-50/50 border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-700">টাকার পরিমাণ (৳)</label>
+                        <input type="number" id="wd-amount" required placeholder="যেমন: 100" class="w-full mt-1 px-4 py-3 bg-green-50/50 border border-green-200 rounded-xl text-sm focus:outline-none focus:border-green-600">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-gray-700">৪ সংখ্যার উইথড্র পিন</label>
+                            <button type="button" onclick="openForgetPinModal()" class="text-xs text-green-600 font-bold hover:underline">পিন ভুলে গেছেন?</button>
+                        </div>
+                        <input type="password" id="wd-pin" maxlength="4" pattern="\d{4}" required placeholder="••••" class="w-full mt-1 px-4 py-3 bg-green-50/50 border border-green-200 rounded-xl text-sm tracking-widest focus:outline-none focus:border-green-600">
+                    </div>
+
+                    <button type="submit" class="btn-green-shine w-full text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-green-600/30 text-sm">
+                        উইথড্র রিকোয়েস্ট পাঠান
+                    </button>
+                </form>
+            </div>
+
+            <!-- ==================== সম্পূর্ণ হিস্ট্রি পেজ ==================== -->
+            <div id="page-history" class="app-page hidden p-5 animate-fade-up">
+                <div class="flex items-center space-x-3 mb-5">
+                    <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-lg font-bold text-gray-800">সম্পূর্ণ ইনকাম ও উইথড্র হিস্ট্রি</h2>
+                </div>
+
+                <div id="history-list-container" class="space-y-3"></div>
+            </div>
+
+            <!-- ==================== সেটিংস ও প্রোফাইল পেজ (প্রোফাইল পিকচার বদলানোর সুবিধা) ==================== -->
+            <div id="page-settings" class="app-page hidden p-5 animate-fade-up">
+                <div class="flex items-center space-x-3 mb-5">
+                    <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-lg font-bold text-gray-800">সেটিংস ও সাপোর্ট</h2>
+                </div>
+
+                <!-- প্রোফাইল কার্ড ও ছবি পরিবর্তন বাটন -->
+                <div class="bg-green-50 border border-green-200 rounded-3xl p-4 flex items-center justify-between mb-5 shadow-sm">
+                    <div class="flex items-center space-x-3.5">
+                        <img id="set-user-avatar" src="https://i.ibb.co.com/kgwJdrnY/20261113-113802.png" class="w-14 h-14 rounded-2xl shadow object-cover bg-white border border-green-300">
+                        <div>
+                            <h3 id="set-user-name" class="font-bold text-gray-800 text-base">ইউজার নাম</h3>
+                            <p id="set-user-email" class="text-xs text-gray-500">user@email.com</p>
+                            <span id="set-user-id" class="inline-block mt-1 text-[10px] bg-green-600 text-white px-2.5 py-0.5 rounded-full font-bold">ID: 0000000</span>
+                        </div>
+                    </div>
+                    <label for="change-avatar-input" class="cursor-pointer bg-green-600 hover:bg-green-700 text-white p-2.5 rounded-xl shadow transition">
+                        <i data-lucide="camera" class="w-5 h-5"></i>
+                    </label>
+                    <input type="file" id="change-avatar-input" accept="image/*" onchange="updateProfilePhoto(event)" class="hidden">
+                </div>
+
+                <form onsubmit="handleChangePassword(event)" class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm space-y-3 mb-4">
+                    <h4 class="text-sm font-bold text-gray-800 flex items-center"><i data-lucide="key" class="w-4 h-4 mr-2 text-green-600"></i> পাসওয়ার্ড পরিবর্তন করুন</h4>
+                    <input type="password" id="old-pass" required placeholder="বর্তমান পাসওয়ার্ড" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs">
+                    <input type="password" id="new-pass" required placeholder="নতুন পাসওয়ার্ড" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs">
+                    <button type="submit" class="btn-green-shine w-full text-white font-bold py-2.5 rounded-xl text-xs">পাসওয়ার্ড আপডেট করুন</button>
+                </form>
+
+                <form onsubmit="handleUpdatePin(event)" class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm space-y-3 mb-4">
+                    <h4 class="text-sm font-bold text-gray-800 flex items-center"><i data-lucide="shield-check" class="w-4 h-4 mr-2 text-green-600"></i> উইথড্র পিন পরিবর্তন (৪ সংখ্যা)</h4>
+                    <input type="password" id="update-pin-input" maxlength="4" pattern="\d{4}" required placeholder="নতুন ৪ সংখ্যার পিন দিন" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs">
+                    <button type="submit" class="btn-green-shine w-full text-white font-bold py-2.5 rounded-xl text-xs">নতুন পিন সেভ করুন</button>
+                </form>
+
+                <a id="support-link-btn" href="#" target="_blank" class="btn-green-shine w-full text-white font-bold py-3.5 rounded-2xl flex items-center justify-center space-x-2 shadow-md mb-3">
+                    <i data-lucide="headphones" class="w-5 h-5"></i>
+                    <span>লাইভ অ্যাডমিন সাপোর্ট</span>
+                </a>
+
+                <button type="button" onclick="logoutUser()" class="w-full bg-red-50 text-red-600 font-bold py-3 rounded-2xl text-xs border border-red-200">
+                    লগআউট করুন
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== বটম নেভিগেশন বার ==================== -->
+        <nav id="bottom-nav" class="hidden fixed bottom-0 w-full max-w-[440px] glass-card border-t border-green-100 px-3 py-2.5 flex items-center justify-around z-30 shadow-[0_-4px_15px_rgba(0,0,0,0.05)]">
+            <button type="button" onclick="navigateTo('home')" data-nav="home" class="nav-item btn-green-shine text-white px-4 py-2 rounded-xl flex items-center space-x-1.5 text-xs font-bold shadow-sm">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                <span>হোম</span>
+            </button>
+            <button type="button" onclick="navigateTo('spin')" data-nav="spin" class="nav-item text-gray-500 hover:text-green-600 px-3 py-2 rounded-xl flex flex-col items-center text-[11px] font-semibold">
+                <i data-lucide="disc" class="w-5 h-5 mb-0.5"></i>
+                <span>স্পিন</span>
+            </button>
+            <button type="button" onclick="navigateTo('refer')" data-nav="refer" class="nav-item text-gray-500 hover:text-green-600 px-3 py-2 rounded-xl flex flex-col items-center text-[11px] font-semibold">
+                <i data-lucide="users" class="w-5 h-5 mb-0.5"></i>
+                <span>রেফার</span>
+            </button>
+            <button type="button" onclick="navigateTo('withdraw')" data-nav="withdraw" class="nav-item text-gray-500 hover:text-green-600 px-3 py-2 rounded-xl flex flex-col items-center text-[11px] font-semibold">
+                <i data-lucide="wallet" class="w-5 h-5 mb-0.5"></i>
+                <span>উইথড্র</span>
+            </button>
+            <button type="button" onclick="navigateTo('settings')" data-nav="settings" class="nav-item text-gray-500 hover:text-green-600 px-3 py-2 rounded-xl flex flex-col items-center text-[11px] font-semibold">
+                <i data-lucide="settings" class="w-5 h-5 mb-0.5"></i>
+                <span>সেটিংস</span>
+            </button>
+        </nav>
+
+        <!-- ==================== স্মার্ট লিংক অ্যাডিস্টা ওয়েবভিউ মডাল ==================== -->
+        <div id="ad-viewer-modal" class="hidden fixed inset-0 z-50 flex justify-center bg-black/80 backdrop-blur-sm">
+            <div class="w-full max-w-[440px] bg-white h-full flex flex-col">
+                <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-4 py-3 flex items-center justify-between shadow-md shrink-0">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center animate-spin">
+                            <i data-lucide="loader-2" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <div>
+                            <p id="ad-timer-status" class="text-xs font-bold">স্মার্ট অ্যাড লোড হচ্ছে...</p>
+                            <p class="text-[11px] text-green-100">বাকি সময়: <span id="ad-countdown" class="font-extrabold text-yellow-300 text-sm">15</span> সেকেন্ড</p>
+                        </div>
+                    </div>
+
+                    <button type="button" id="close-ad-btn" onclick="claimAdAndClose()" class="hidden bg-white text-green-700 hover:bg-red-500 hover:text-white w-9 h-9 rounded-full font-extrabold text-lg flex items-center justify-center shadow-lg transition transform hover:scale-110">
+                        ✕
+                    </button>
+                </div>
+
+                <div class="w-full bg-green-100 h-1.5 shrink-0">
+                    <div id="ad-progress-bar" class="bg-green-600 h-full w-0 transition-all duration-1000"></div>
+                </div>
+
+                <div class="flex-1 relative bg-gray-100">
+                    <iframe id="smart-link-iframe" src="about:blank" class="w-full h-full border-0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== প্রিমিয়াম উইথড্র সাকসেসফুল পপআপ (তথ্য হাইড ও টিএক্সটি ডাউনলোড) ==================== -->
+        <div id="withdraw-success-modal" class="hidden fixed inset-0 z-50 glass-modal flex items-center justify-center p-5">
+            <div class="glass-card w-full max-w-[380px] rounded-3xl p-6 text-center shadow-2xl border-2 border-green-300 animate-fade-up">
+                <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg shadow-green-600/40">
+                    <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+                </div>
+                <h3 class="text-xl font-extrabold text-green-800">উইথড্র সাকসেসফুল!</h3>
+                <p class="text-xs text-gray-600 mt-1">দুই-তিন মিনিটের মধ্যে আপনার পেমেন্ট পৌঁছে যাবে।</p>
+
+                <div class="bg-green-50/90 border border-green-200 rounded-2xl p-4 mt-4 text-left space-y-2 text-xs">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">প্রোফাইল নাম:</span>
+                        <b id="pop-username" class="text-gray-800">তানভীর আহমেদ</b>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">মেথড:</span>
+                        <b id="pop-method" class="text-gray-800">বিকাশ</b>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">নম্বর:</span>
+                        <b id="pop-number" class="text-gray-800 font-mono">017••••••••</b>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">পরিমাণ:</span>
+                        <b id="pop-amount" class="text-green-700 text-sm">৳ 100.00</b>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">স্ট্যাটাস:</span>
+                        <span id="pop-status-badge" class="bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold">Pending</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-4">
+                    <button type="button" onclick="downloadWithdrawTxtReceipt()" class="flex-1 bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>ডাউনলোড রসিদ</span>
+                    </button>
+                    <button type="button" onclick="closeWithdrawSuccessModal()" class="btn-green-shine flex-1 text-white font-bold py-3 rounded-xl text-xs shadow-md">
+                        ঠিক আছে
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ফরগেট পিন মডাল ==================== -->
+        <div id="forget-pin-modal" class="hidden fixed inset-0 z-50 glass-modal flex items-center justify-center p-5">
+            <div class="glass-card w-full max-w-[370px] rounded-3xl p-6 shadow-2xl animate-fade-up">
+                <h3 class="text-lg font-extrabold text-gray-800">পিন রিসেট করুন</h3>
+                <p class="text-xs text-gray-500 mt-1">আপনার রেজিস্টার্ড ইমেইল অ্যাড্রেস দিয়ে নতুন ৪ সংখ্যার পিন সেট করুন।</p>
+                <form onsubmit="handleResetPin(event)" class="space-y-3 mt-4">
+                    <input type="email" id="reset-pin-email" required placeholder="আপনার ইমেইল লিখুন" class="w-full px-3.5 py-2.5 bg-white border border-green-200 rounded-xl text-xs">
+                    <input type="password" id="reset-pin-new" maxlength="4" pattern="\d{4}" required placeholder="নতুন ৪ সংখ্যার পিন" class="w-full px-3.5 py-2.5 bg-white border border-green-200 rounded-xl text-xs">
+                    <div class="flex gap-2 pt-1">
+                        <button type="button" onclick="closeForgetPinModal()" class="flex-1 bg-gray-100 text-gray-700 font-bold py-2.5 rounded-xl text-xs">বাতিল</button>
+                        <button type="submit" class="btn-green-shine flex-1 text-white font-bold py-2.5 rounded-xl text-xs">পিন সেট করুন</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- টোস্ট নোটিফিকেশন -->
+        <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900/95 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 z-[130] flex items-center space-x-2">
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <span id="toast-msg">মেসেজ</span>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK (Module) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBH9xZYOMyexJxxuIMBC3iaSi1c_dLhOag",
+            authDomain: "mama-earrings.firebaseapp.com",
+            databaseURL: "https://mama-earrings-default-rtdb.firebaseio.com",
+            projectId: "mama-earrings",
+            storageBucket: "mama-earrings.firebasestorage.app",
+            messagingSenderId: "572659666027",
+            appId: "1:572659666027:web:9b7d8692c6252307f1752e",
+            measurementId: "G-8SFEQ3C6N2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ডাইনামিক বেস ইউআরএল যা ব্রাউজার রান করলে অটো ডিটেক্ট হবে
+        const dynamicBaseUrl = window.location.href.split('?')[0];
+
+        const DEFAULT_SETTINGS = {
+            appName: "MAMA EARN",
+            smartLink: "https://asiafilm.org/4/e2eaa5afc791fbe75e1b6857b7a151f2",
+            adDuration: 15,
+            dailyAdLimit: 20,
+            adReward: 2.50,
+            referReward: 25.00,
+            baseWebsiteUrl: dynamicBaseUrl,
+            minWithdraw: 100,
+            paymentMethods: ["বিকাশ (bKash)", "নগদ (Nagad)", "রকেট (Rocket)"],
+            spinPrizes: [1, 5, 2, 10, 0.5, 15, 3, 20],
+            winningIndex: 3,
+            dailySpinLimit: 10,
+            supportLink: "https://t.me/mamaearnsupport",
+            telegramNoticeText: "মামাবাড়িতে স্বাগতম! পেমেন্ট প্রুফ এবং সকল আপডেট পেতে অবশ্যই আমাদের অফিসিয়াল টেলিগ্রাম চ্যানেলে জয়েন করুন।",
+            noticeText: "প্রতিদিন স্মার্ট অ্যাড দেখে এবং বন্ধুদের রেফার করে আনলিমিটেড ইনকাম করুন।"
+        };
+
+        let appSettings = JSON.parse(localStorage.getItem('mama_admin_settings')) || DEFAULT_SETTINGS;
+        let currentUser = JSON.parse(localStorage.getItem('mama_current_user')) || null;
+        let uploadedPhotoBase64 = "";
+        let lastWithdrawReceiptData = null;
+
+        window.previewProfilePhoto = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 160;
+                    canvas.height = 160;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, 160, 160);
+                    uploadedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                    document.getElementById('reg-photo-preview').src = uploadedPhotoBase64;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // সেটিংস থেকে প্রোফাইল পিকচার পরিবর্তন
+        window.updateProfilePhoto = (event) => {
+            const file = event.target.files[0];
+            if (!file || !currentUser) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 160;
+                    canvas.height = 160;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, 160, 160);
+                    const photoUrl = canvas.toDataURL('image/jpeg', 0.75);
+                    currentUser.photo = photoUrl;
+                    saveCurrentUser();
+                    updateUserStatsUI();
+                    showToast('প্রোফাইল পিকচার সফলভাবে আপডেট হয়েছে!');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // URL থেকে রেফার প্যারামিটার ডিটেক্ট
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref');
+            if (refParam) {
+                switchAuthTab('register');
+                document.getElementById('reg-refer').value = refParam;
+                showToast('রেফার আইডি অটোমেটিক যুক্ত হয়েছে!');
+            } else {
+                document.getElementById('reg-refer').value = '1234567';
+            }
+
+            onSnapshot(doc(db, "mama_earn_config", "global_settings"), (docSnap) => {
+                if (docSnap.exists()) {
+                    appSettings = { ...DEFAULT_SETTINGS, ...docSnap.data() };
+                    localStorage.setItem('mama_admin_settings', JSON.stringify(appSettings));
+                    applySettingsToUI();
+                }
+            }, () => {});
+
+            applySettingsToUI();
+
+            if (currentUser) {
+                listenToUserRealTime(currentUser.email);
+                showMainDashboard();
+            }
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'mama_admin_settings') {
+                    appSettings = JSON.parse(e.newValue);
+                    applySettingsToUI();
+                }
+            });
+        });
+
+        function listenToUserRealTime(email) {
+            onSnapshot(doc(db, "mama_earn_users", email), (snap) => {
+                if (snap.exists()) {
+                    const liveData = snap.data();
+                    currentUser = { ...currentUser, ...liveData };
+                    localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
+                    checkIfBanned();
+                    updateUserStatsUI();
+                }
+            }, () => {});
+        }
+
+        function checkIfBanned() {
+            if (currentUser && currentUser.isBanned) {
+                document.getElementById('banned-screen').classList.remove('hidden');
+            } else {
+                document.getElementById('banned-screen').classList.add('hidden');
+            }
+        }
+
+        function applySettingsToUI() {
+            document.getElementById('auth-app-name').textContent = appSettings.appName;
+            document.getElementById('header-app-name').textContent = appSettings.appName;
+            document.getElementById('max-ads-limit').textContent = appSettings.dailyAdLimit;
+            document.getElementById('card-ad-rate').textContent = Number(appSettings.adReward).toFixed(2);
+            document.getElementById('card-refer-rate').textContent = Number(appSettings.referReward).toFixed(2);
+            document.getElementById('refer-page-bonus').textContent = Number(appSettings.referReward).toFixed(2);
+            document.getElementById('min-withdraw-display').textContent = appSettings.minWithdraw;
+            document.getElementById('app-notice-text').textContent = appSettings.noticeText;
+            document.getElementById('popup-notice-text').textContent = appSettings.telegramNoticeText || "মামাবাড়িতে স্বাগতম! টেলিগ্রাম চ্যানেলে জয়েন করুন।";
+            document.getElementById('telegram-link-btn').href = appSettings.supportLink || '#';
+            document.getElementById('support-link-btn').href = appSettings.supportLink || '#';
+
+            const pmContainer = document.getElementById('payment-methods-container');
+            pmContainer.innerHTML = '';
+            (appSettings.paymentMethods || []).forEach((method, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `pm-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition ${idx === 0 ? 'btn-green-shine text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200'}`;
+                btn.textContent = method;
+                if (idx === 0) document.getElementById('selected-method').value = method;
+                btn.onclick = () => {
+                    document.querySelectorAll('.pm-btn').forEach(b => {
+                        b.className = 'pm-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition bg-gray-50 text-gray-700 border-gray-200';
+                    });
+                    btn.className = 'pm-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition btn-green-shine text-white border-green-600';
+                    document.getElementById('selected-method').value = method;
+                };
+                pmContainer.appendChild(btn);
+            });
+
+            drawSpinWheel();
+            if (currentUser) updateUserStatsUI();
+        }
+
+        window.switchAuthTab = (tab) => {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const loginBtn = document.getElementById('tab-login-btn');
+            const regBtn = document.getElementById('tab-register-btn');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                loginBtn.className = 'btn-green-shine text-white py-2.5 rounded-xl font-bold text-sm shadow';
+                regBtn.className = 'text-green-700 py-2.5 rounded-xl font-bold text-sm transition';
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                regBtn.className = 'btn-green-shine text-white py-2.5 rounded-xl font-bold text-sm shadow';
+                loginBtn.className = 'text-green-700 py-2.5 rounded-xl font-bold text-sm transition';
+            }
+        };
+
+        window.clearReferInput = () => {
+            const input = document.getElementById('reg-refer');
+            input.value = '';
+            input.focus();
+            showToast('নতুন ৭ সংখ্যার রেফার আইডি বা লিংক বসান');
+        };
+
+        // রেজিস্ট্রেশন উইথ ৭ ডিজিট আইডি এবং ৳৫০ বোনাস
+        window.handleRegister = async (e) => {
+            e.preventDefault();
+            if (!uploadedPhotoBase64) {
+                showToast('অনুগ্রহ করে আপনার প্রোফাইল পিকচার আপলোড করুন!');
+                return;
+            }
+
+            const name = document.getElementById('reg-name').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const pass = document.getElementById('reg-pass').value;
+            const pin = document.getElementById('reg-pin').value;
+            const refInput = document.getElementById('reg-refer').value.trim();
+
+            // ৭ সংখ্যার ইউনিক রেফার আইডি জেনারেট (যেমন: 4892015)
+            const referCode = String(Math.floor(1000000 + Math.random() * 9000000));
+            const signupBonus = 50.00;
+
+            const newUser = {
+                name,
+                phone,
+                email,
+                pass,
+                pin,
+                photo: uploadedPhotoBase64,
+                referCode,
+                referredBy: refInput || 'None',
+                isBanned: false,
+                balance: signupBonus,
+                referEarn: 0,
+                referCount: 0,
+                todayAds: 0,
+                spinsLeft: Number(appSettings.dailySpinLimit) || 10,
+                joinedAt: new Date().toLocaleString('bn-BD'),
+                history: [
+                    {
+                        title: 'রেজিস্ট্রেশন বোনাস',
+                        amount: signupBonus,
+                        type: 'credit',
+                        date: new Date().toLocaleString('bn-BD')
+                    }
+                ]
+            };
+
+            let allUsers = JSON.parse(localStorage.getItem('mama_all_users')) || [];
+            allUsers = allUsers.filter(u => u.email !== email);
+            allUsers.push(newUser);
+            localStorage.setItem('mama_all_users', JSON.stringify(allUsers));
+            currentUser = newUser;
+            localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
+
+            try {
+                await setDoc(doc(db, "mama_earn_users", email), newUser);
+            } catch (err) {}
+
+            listenToUserRealTime(email);
+            showMainDashboard();
+            // রেজিস্টার করার সাথে সাথে ৳৫০ বোনাসের পপআপ দেখানো
+            document.getElementById('signup-bonus-modal').classList.remove('hidden');
+        };
+
+        window.closeSignupBonusModal = () => {
+            document.getElementById('signup-bonus-modal').classList.add('hidden');
+            // পপআপ কাটার পর টেলিগ্রাম নোটিশ পপআপ দেখানো
+            document.getElementById('telegram-notice-modal').classList.remove('hidden');
+        };
+
+        window.closeTelegramModal = () => {
+            document.getElementById('telegram-notice-modal').classList.add('hidden');
+        };
+
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const pass = document.getElementById('login-pass').value;
+
+            let found = null;
+            try {
+                const snap = await getDoc(doc(db, "mama_earn_users", email));
+                if (snap.exists() && snap.data().pass === pass) {
+                    found = snap.data();
+                }
+            } catch (err) {}
+
+            if (!found) {
+                const allUsers = JSON.parse(localStorage.getItem('mama_all_users')) || [];
+                found = allUsers.find(u => u.email === email && u.pass === pass);
+            }
+
+            if (found) {
+                currentUser = found;
+                localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
+                listenToUserRealTime(email);
+                showToast('স্বাগতম ' + currentUser.name + '!');
+                showMainDashboard();
+                // লগইন করার পর টেলিগ্রাম নোটিশ পপআপ দেখানো
+                document.getElementById('telegram-notice-modal').classList.remove('hidden');
+            } else {
+                showToast('ইমেইল বা পাসওয়ার্ড ভুল হয়েছে!');
+            }
+        };
+
+        function showMainDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.remove('hidden');
+            checkIfBanned();
+            updateUserStatsUI();
+        }
+
+        function saveCurrentUser() {
+            localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
+            let allUsers = JSON.parse(localStorage.getItem('mama_all_users')) || [];
+            const idx = allUsers.findIndex(u => u.email === currentUser.email);
+            if (idx !== -1) allUsers[idx] = currentUser;
+            else allUsers.push(currentUser);
+            localStorage.setItem('mama_all_users', JSON.stringify(allUsers));
+
+            setDoc(doc(db, "mama_earn_users", currentUser.email), currentUser).catch(() => {});
+        }
+
+        function updateUserStatsUI() {
+            if (!currentUser) return;
+            document.getElementById('display-user-name').textContent = currentUser.name;
+            document.getElementById('display-user-id').textContent = `ID: ${currentUser.referCode}`;
+            document.getElementById('display-user-phone').textContent = currentUser.phone || 'Verified';
+            document.getElementById('display-refer-id-code').textContent = currentUser.referCode;
+            if (currentUser.photo) {
+                document.getElementById('user-avatar').src = currentUser.photo;
+                document.getElementById('set-user-avatar').src = currentUser.photo;
+            }
+            document.getElementById('set-user-name').textContent = currentUser.name;
+            document.getElementById('set-user-email').textContent = currentUser.email;
+            document.getElementById('set-user-id').textContent = `ID: ${currentUser.referCode}`;
+            document.getElementById('display-balance').textContent = Number(currentUser.balance).toFixed(2);
+            document.getElementById('withdraw-bal-display').textContent = Number(currentUser.balance).toFixed(2);
+            document.getElementById('today-ads-count').textContent = currentUser.todayAds;
+            document.getElementById('display-refer-earn').textContent = Number(currentUser.referEarn).toFixed(2);
+            document.getElementById('total-refer-income').textContent = Number(currentUser.referEarn).toFixed(2);
+            document.getElementById('total-refer-count').textContent = currentUser.referCount;
+            document.getElementById('remaining-spins').textContent = currentUser.spinsLeft ?? 10;
+
+            const baseUrl = appSettings.baseWebsiteUrl || window.location.href.split('?')[0];
+            const separator = baseUrl.includes('?') ? '&' : '?';
+            document.getElementById('my-referral-link').value = `${baseUrl}${separator}ref=${currentUser.referCode}`;
+
+            renderHistory();
+        }
+
+        window.navigateTo = (pageId) => {
+            document.querySelectorAll('.app-page').forEach(p => p.classList.add('hidden'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                const isTarget = btn.getAttribute('data-nav') === pageId;
+                if (isTarget) {
+                    btn.className = 'nav-item btn-green-shine text-white px-4 py-2 rounded-xl flex items-center space-x-1.5 text-xs font-bold shadow-sm';
+                } else {
+                    btn.className = 'nav-item text-gray-500 hover:text-green-600 px-3 py-2 rounded-xl flex flex-col items-center text-[11px] font-semibold';
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // 스마트 লিংক অ্যাডিস্টা ওয়েবভিউ ও টাইমার
+        let adTimerInterval;
+        window.openAdViewer = () => {
+            if (currentUser.todayAds >= Number(appSettings.dailyAdLimit)) {
+                showToast('আজকের দৈনিক অ্যাড লিমিট শেষ হয়ে গেছে!');
+                return;
+            }
+
+            const modal = document.getElementById('ad-viewer-modal');
+            const iframe = document.getElementById('smart-link-iframe');
+            const closeBtn = document.getElementById('close-ad-btn');
+            const countdownEl = document.getElementById('ad-countdown');
+            const progressBar = document.getElementById('ad-progress-bar');
+            const statusEl = document.getElementById('ad-timer-status');
+
+            let totalSeconds = Number(appSettings.adDuration) || 15;
+            let remaining = totalSeconds;
+
+            closeBtn.classList.add('hidden');
+            countdownEl.textContent = remaining;
+            progressBar.style.width = '0%';
+            statusEl.textContent = 'স্মার্ট অ্যাড চলছে, অপেক্ষা করুন...';
+
+            iframe.src = appSettings.smartLink;
+            modal.classList.remove('hidden');
+
+            clearInterval(adTimerInterval);
+            adTimerInterval = setInterval(() => {
+                remaining--;
+                countdownEl.textContent = remaining > 0 ? remaining : 0;
+                const pct = ((totalSeconds - remaining) / totalSeconds) * 100;
+                progressBar.style.width = `${pct}%`;
+
+                if (remaining <= 0) {
+                    clearInterval(adTimerInterval);
+                    statusEl.textContent = 'অ্যাড দেখা সম্পন্ন! কাটতে (✕) ক্লিক করুন';
+                    closeBtn.classList.remove('hidden');
+                }
+            }, 1000);
+        };
+
+        window.claimAdAndClose = () => {
+            clearInterval(adTimerInterval);
+            document.getElementById('smart-link-iframe').src = 'about:blank';
+            document.getElementById('ad-viewer-modal').classList.add('hidden');
+
+            const reward = Number(appSettings.adReward) || 2.50;
+            currentUser.balance = Number(currentUser.balance) + reward;
+            currentUser.todayAds = Number(currentUser.todayAds) + 1;
+            currentUser.history.unshift({
+                title: 'স্মার্ট অ্যাড ভিউ রিওয়ার্ড',
+                amount: reward,
+                type: 'credit',
+                date: new Date().toLocaleString('bn-BD')
+            });
+
+            saveCurrentUser();
+            updateUserStatsUI();
+            showToast(`অভিনন্দন! আপনার ব্যালেন্সে +৳${reward.toFixed(2)} যোগ হয়েছে!`);
+        };
+
+        // লাকি স্পিন হুইল (স্পিন করার পর পর অটো অ্যাড আসবে, কোনো ব্যালেন্স যোগ হবে না অটো অ্যাডে)
+        let currentWheelRotation = 0;
+        let isSpinning = false;
+
+        function drawSpinWheel() {
+            const canvas = document.getElementById('spin-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const prizes = appSettings.spinPrizes || [1, 5, 2, 10, 0.5, 15, 3, 20];
+            const numSegments = prizes.length;
+            const arc = (2 * Math.PI) / numSegments;
+            const colors = ['#16a34a', '#ffffff', '#15803d', '#f0fdf4', '#22c55e', '#dcfce7', '#166534', '#ffffff'];
+
+            ctx.clearRect(0, 0, 260, 260);
+            for (let i = 0; i < numSegments; i++) {
+                const angle = i * arc - Math.PI / 2;
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(130, 130);
+                ctx.arc(130, 130, 126, angle, angle + arc);
+                ctx.fill();
+                ctx.strokeStyle = '#16a34a';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(130, 130);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = (i % 2 === 0) ? '#ffffff' : '#14532d';
+                ctx.font = 'bold 14px Inter, sans-serif';
+                ctx.fillText(`৳${prizes[i]}`, 108, 5);
+                ctx.restore();
+            }
+        }
+
+        window.startSpin = () => {
+            if (isSpinning) return;
+            if (currentUser.spinsLeft <= 0) {
+                showToast('আজকের সব স্পিন শেষ হয়ে গেছে!');
+                return;
+            }
+
+            isSpinning = true;
+            const prizes = appSettings.spinPrizes || [1, 5, 2, 10, 0.5, 15, 3, 20];
+            const winIdx = Number(appSettings.winningIndex) % prizes.length;
+            const segAngle = 360 / prizes.length;
+
+            const targetAngle = 360 - (winIdx * segAngle + segAngle / 2);
+            const extraSpins = 360 * 6;
+            currentWheelRotation += extraSpins + targetAngle - (currentWheelRotation % 360);
+
+            const canvas = document.getElementById('spin-canvas');
+            canvas.style.transform = `rotate(${currentWheelRotation}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                const wonAmount = Number(prizes[winIdx]);
+                currentUser.spinsLeft -= 1;
+                currentUser.balance = Number(currentUser.balance) + wonAmount;
+                currentUser.history.unshift({
+                    title: 'লাকি স্পিন বোনাস',
+                    amount: wonAmount,
+                    type: 'credit',
+                    date: new Date().toLocaleString('bn-BD')
+                });
+
+                saveCurrentUser();
+                updateUserStatsUI();
+                showToast(`দারুণ! স্পিন করে জিতেছেন ৳${wonAmount.toFixed(2)}!`);
+
+                // স্পিনের পর পর অটোমেটিক অ্যাড ওপেন হবে (কোনো ব্যালেন্স যোগ হবে না এই অটো অ্যাডে, শুধু ভিউ)
+                setTimeout(() => {
+                    openAutoInterstitialAd();
+                }, 800);
+            }, 4100);
+        };
+
+        // স্পিনের পর অটো অ্যাড (যেটি কেটে দিলে কোনো ব্যালেন্স যোগ হবে না)
+        function openAutoInterstitialAd() {
+            const modal = document.getElementById('ad-viewer-modal');
+            const iframe = document.getElementById('smart-link-iframe');
+            const closeBtn = document.getElementById('close-ad-btn');
+            const countdownEl = document.getElementById('ad-countdown');
+            const progressBar = document.getElementById('ad-progress-bar');
+            const statusEl = document.getElementById('ad-timer-status');
+
+            let remaining = 5;
+            countdownEl.textContent = remaining;
+            progressBar.style.width = '0%';
+            statusEl.textContent = 'স্পিন পরবর্তী অটো অ্যাড (কাটলে কোনো ব্যালেন্স যোগ হবে না)';
+            closeBtn.classList.add('hidden');
+
+            iframe.src = appSettings.smartLink;
+            modal.classList.remove('hidden');
+
+            clearInterval(adTimerInterval);
+            adTimerInterval = setInterval(() => {
+                remaining--;
+                countdownEl.textContent = remaining > 0 ? remaining : 0;
+                progressBar.style.width = `${(5 - remaining) / 5 * 100}%`;
+
+                if (remaining <= 0) {
+                    clearInterval(adTimerInterval);
+                    statusEl.textContent = 'অ্যাড সম্পন্ন! ক্লোজ (✕) করুন';
+                    closeBtn.classList.remove('hidden');
+                    // কাস্টম ক্লোজ ফাংশন যা শুধু অ্যাড বন্ধ করবে, কোনো টাকা যোগ করবে না
+                    closeBtn.onclick = () => {
+                        clearInterval(adTimerInterval);
+                        iframe.src = 'about:blank';
+                        modal.classList.add('hidden');
+                        // আগের অরিজিনাল ক্লোজ বাটন ফাংশন রি-অ্যাসাইন
+                        closeBtn.onclick = claimAdAndClose;
+                    };
+                }
+            }, 1000);
+        }
+
+        window.copyReferIdOnly = () => {
+            navigator.clipboard.writeText(currentUser.referCode);
+            showToast('৭ সংখ্যার রেফার আইডি কপি হয়েছে!');
+        };
+
+        window.copyReferralLink = () => {
+            const input = document.getElementById('my-referral-link');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            showToast('রেফার লিংক কপি হয়েছে!');
+        };
+
+        // উইথড্র সাবমিট ও তথ্য হাইড করা
+        window.handleWithdrawSubmit = (e) => {
+            e.preventDefault();
+            const method = document.getElementById('selected-method').value;
+            const number = document.getElementById('wd-number').value.trim();
+            const email = document.getElementById('wd-email').value.trim();
+            const amount = Number(document.getElementById('wd-amount').value);
+            const pin = document.getElementById('wd-pin').value;
+
+            if (pin !== currentUser.pin) {
+                showToast('ভুল পিন দিয়েছেন! সঠিক ৪ সংখ্যার পিন দিন।');
+                return;
+            }
+            if (amount < Number(appSettings.minWithdraw)) {
+                showToast(`সর্বনিম্ন উইথড্র ৳${appSettings.minWithdraw} টাকা!`);
+                return;
+            }
+            if (amount > Number(currentUser.balance)) {
+                showToast('আপনার একাউন্টে পর্যাপ্ত ব্যালেন্স নেই!');
+                return;
+            }
+
+            currentUser.balance = Number(currentUser.balance) - amount;
+            const wdRecord = {
+                id: 'WD' + Date.now(),
+                userName: currentUser.name,
+                userEmail: currentUser.email,
+                method,
+                number,
+                email,
+                amount,
+                status: 'Pending',
+                date: new Date().toLocaleString('bn-BD')
+            };
+
+            lastWithdrawReceiptData = wdRecord;
+
+            currentUser.history.unshift({
+                title: `উইথড্র (${method})`,
+                amount: amount,
+                type: 'debit',
+                date: wdRecord.date
+            });
+
+            let allWithdraws = JSON.parse(localStorage.getItem('mama_withdraw_requests')) || [];
+            allWithdraws.unshift(wdRecord);
+            localStorage.setItem('mama_withdraw_requests', JSON.stringify(allWithdraws));
+
+            setDoc(doc(db, "mama_earn_withdraws", wdRecord.id), wdRecord).catch(() => {});
+
+            saveCurrentUser();
+            updateUserStatsUI();
+
+            // পপআপে নাম্বার হাইড করে দেখানো (যেমন: 017••••••••)
+            const maskedNumber = number.length > 4 ? number.substring(0, 3) + '••••••••' : '••••••••';
+            document.getElementById('pop-username').textContent = currentUser.name;
+            document.getElementById('pop-method').textContent = method;
+            document.getElementById('pop-number').textContent = maskedNumber;
+            document.getElementById('pop-amount').textContent = `৳ ${amount.toFixed(2)}`;
+            document.getElementById('pop-status-badge').textContent = 'Pending';
+            document.getElementById('pop-status-badge').className = 'bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold';
+
+            document.getElementById('withdraw-success-modal').classList.remove('hidden');
+            e.target.reset();
+        };
+
+        // টিএক্সটি ফাইলে উইথড্র ইনফরমেশন ডাউনলোড
+        window.downloadWithdrawTxtReceipt = () => {
+            if (!lastWithdrawReceiptData) return;
+            const r = lastWithdrawReceiptData;
+            const content = `=====================================\n  MAMA EARN - WITHDRAW RECEIPT SLIP\n=====================================\nTransaction ID: ${r.id}\nUser Name: ${r.userName}\nUser Email: ${r.userEmail}\nPayment Method: ${r.method}\nAccount Number: ${r.number}\nAmount: BDT ${r.amount.toFixed(2)}\nStatus: ${r.status}\nDate & Time: ${r.date}\n=====================================\nThank you for using MAMA EARN!`;
+
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `MAMA_EARN_Receipt_${r.id}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('রসিদ সফলভাবে ডাউনলোড হয়েছে!');
+        };
+
+        window.closeWithdrawSuccessModal = () => {
+            document.getElementById('withdraw-success-modal').classList.add('hidden');
+            navigateTo('home');
+        };
+
+        window.openForgetPinModal = () => document.getElementById('forget-pin-modal').classList.remove('hidden');
+        window.closeForgetPinModal = () => document.getElementById('forget-pin-modal').classList.add('hidden');
+
+        window.handleResetPin = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reset-pin-email').value.trim().toLowerCase();
+            const newPin = document.getElementById('reset-pin-new').value;
+            if (email !== currentUser.email) {
+                showToast('ইমেইল অ্যাড্রেসটি মিলছে না!');
+                return;
+            }
+            currentUser.pin = newPin;
+            saveCurrentUser();
+            closeForgetPinModal();
+            showToast('নতুন ৪ সংখ্যার পিন সফলভাবে সেট হয়েছে!');
+        };
+
+        window.handleChangePassword = (e) => {
+            e.preventDefault();
+            const oldP = document.getElementById('old-pass').value;
+            const newP = document.getElementById('new-pass').value;
+            if (oldP !== currentUser.pass) {
+                showToast('বর্তমান পাসওয়ার্ড ভুল হয়েছে!');
+                return;
+            }
+            currentUser.pass = newP;
+            saveCurrentUser();
+            e.target.reset();
+            showToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!');
+        };
+
+        window.handleUpdatePin = (e) => {
+            e.preventDefault();
+            currentUser.pin = document.getElementById('update-pin-input').value;
+            saveCurrentUser();
+            e.target.reset();
+            showToast('উইথড্র পিন আপডেট হয়েছে!');
+        };
+
+        window.logoutUser = () => {
+            localStorage.removeItem('mama_current_user');
+            location.reload();
+        };
+
+        function renderHistory() {
+            const container = document.getElementById('history-list-container');
+            if (!currentUser.history || currentUser.history.length === 0) {
+                container.innerHTML = '<p class="text-center text-xs text-gray-400 py-8">কোনো লেনদেনের তথ্য নেই</p>';
+                return;
+            }
+            container.innerHTML = currentUser.history.map(item => `
+                <div class="bg-white border border-gray-100 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl ${item.type === 'credit' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'} flex items-center justify-center font-bold">
+                            ${item.type === 'credit' ? '+' : '-'}
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-800">${item.title}</p>
+                            <p class="text-[10px] text-gray-400">${item.date}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-extrabold ${item.type === 'credit' ? 'text-green-600' : 'text-red-600'}">
+                        ${item.type === 'credit' ? '+' : '-'} ৳${Number(item.amount).toFixed(2)}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        let toastTimeout;
+        window.showToast = (msg) => {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2600);
+        };
+    </script>
+</body>
+</html>

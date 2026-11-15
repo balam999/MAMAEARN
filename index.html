@@ -5,11 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAMA EARN - ইনকাম অ্যাপ</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
@@ -61,16 +58,13 @@
         .animate-fade-up {
             animation: fadeUp 0.35s ease-out forwards;
         }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="flex justify-center min-h-screen bg-slate-200">
 
-    <!-- মোবাইল অ্যাপ কন্টেইনার -->
     <div id="app-shell" class="w-full max-w-[440px] bg-white min-h-screen shadow-2xl relative flex flex-col overflow-x-hidden">
 
-        <!-- ==================== টেলিগ্রাম ও নোটিশ পপআপ (অ্যাপে ঢোকার সাথে সাথে) ==================== -->
+        <!-- টেলিগ্রাম ও নোটিশ পপআপ -->
         <div id="telegram-notice-modal" class="hidden fixed inset-0 z-[110] glass-modal flex items-center justify-center p-5">
             <div class="glass-card w-full max-w-[370px] rounded-3xl p-6 text-center shadow-2xl border-2 border-green-400 animate-fade-up relative">
                 <button type="button" onclick="closeTelegramModal()" class="absolute top-4 right-4 bg-gray-100 hover:bg-red-500 hover:text-white text-gray-700 w-8 h-8 rounded-full font-bold flex items-center justify-center transition">✕</button>
@@ -88,7 +82,7 @@
             </div>
         </div>
 
-        <!-- ==================== প্রথম রেজিস্ট্রেশন বোনাস পপআপ (৳৫০) ==================== -->
+        <!-- প্রথম রেজিস্ট্রেশন বোনাস পপআপ (৳৫০) -->
         <div id="signup-bonus-modal" class="hidden fixed inset-0 z-[120] glass-modal flex items-center justify-center p-5">
             <div class="glass-card w-full max-w-[370px] rounded-3xl p-6 text-center shadow-2xl border-2 border-yellow-400 animate-fade-up">
                 <div class="w-20 h-20 bg-yellow-400 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-xl animate-bounce">
@@ -104,7 +98,7 @@
             </div>
         </div>
 
-        <!-- ==================== ব্যানড ইউজার স্ক্রিন ==================== -->
+        <!-- ব্যানড ইউজার স্ক্রিন -->
         <div id="banned-screen" class="hidden fixed inset-0 z-[100] bg-gradient-to-b from-red-700 to-red-950 text-white flex flex-col items-center justify-center p-6 text-center max-w-[440px] mx-auto">
             <div class="w-24 h-24 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center mb-5 border-2 border-red-300 animate-bounce">
                 <i data-lucide="shield-ban" class="w-14 h-14 text-red-200"></i>
@@ -121,7 +115,7 @@
             </button>
         </div>
 
-        <!-- ==================== ১. লগইন ও রেজিস্টার স্ক্রিন ==================== -->
+        <!-- ১. লগইন ও রেজিস্টার স্ক্রিন -->
         <div id="auth-screen" class="min-h-screen flex flex-col justify-between bg-gradient-to-b from-green-600 via-green-700 to-emerald-900 p-5 text-white">
             <div class="pt-3 text-center animate-fade-up">
                 <div class="w-20 h-20 mx-auto bg-white rounded-3xl p-1.5 shadow-xl border-2 border-green-300 mb-2 overflow-hidden">
@@ -131,7 +125,6 @@
                 <p class="text-green-100 text-xs mt-0.5">মামাবাড়ির আদরে প্রতিদিন সহজ ইনকাম!</p>
             </div>
 
-            <!-- গ্লাস ফর্ম কার্ড -->
             <div class="glass-card rounded-3xl p-5 text-gray-800 shadow-2xl my-3 animate-fade-up">
                 <div class="grid grid-cols-2 gap-2 bg-green-50 p-1.5 rounded-2xl mb-4 border border-green-100">
                     <button type="button" id="tab-login-btn" onclick="switchAuthTab('login')" class="btn-green-shine text-white py-2.5 rounded-xl font-bold text-sm shadow">
@@ -224,7 +217,6 @@
                 </form>
             </div>
 
-            <!-- স্ট্যাটাস ফুটার -->
             <div class="text-center pb-1">
                 <div class="text-[11px] bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 inline-flex items-center space-x-1.5">
                     <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
@@ -233,10 +225,10 @@
             </div>
         </div>
 
-        <!-- ==================== ২. মেইন অ্যাপ ড্যাশবোর্ড ==================== -->
+        <!-- ২. মেইন অ্যাপ ড্যাশবোর্ড -->
         <div id="main-app" class="hidden flex-1 flex flex-col pb-24 animate-fade-up">
             
-            <!-- হোম পেজ সেকশন -->
+            <!-- হোম পেজ -->
             <div id="page-home" class="app-page">
                 <header class="bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 text-white pt-5 pb-16 px-5 rounded-b-[34px] shadow-lg relative">
                     <div class="flex items-center justify-between bg-black/15 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/15 mb-4">
@@ -361,7 +353,7 @@
                 </div>
             </div>
 
-            <!-- ==================== লাকি স্পিন হুইল পেজ ==================== -->
+            <!-- লাকি স্পিন হুইল পেজ -->
             <div id="page-spin" class="app-page hidden p-5 animate-fade-up">
                 <div class="flex items-center space-x-3 mb-5">
                     <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
@@ -387,7 +379,7 @@
                 </div>
             </div>
 
-            <!-- ==================== রেফার টু আর্ন পেজ ==================== -->
+            <!-- রেফার টু আর্ন পেজ -->
             <div id="page-refer" class="app-page hidden p-5 animate-fade-up">
                 <div class="flex items-center space-x-3 mb-5">
                     <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
@@ -401,7 +393,6 @@
                     <h3 class="text-xl font-extrabold">বন্ধুদের আমন্ত্রণ জানান!</h3>
                     <p class="text-xs text-green-100 mt-1">আপনার ৭ সংখ্যার রেফার আইডি বা লিংকে কেউ একাউন্ট খুললেই পাবেন <b class="text-yellow-300">৳<span id="refer-page-bonus">25.00</span></b> বোনাস!</p>
 
-                    <!-- ৭ সংখ্যার রেফার আইডি ডিসপ্লে -->
                     <div class="mt-4 bg-white/15 backdrop-blur-md p-3 rounded-2xl border border-white/25 flex items-center justify-between">
                         <div class="text-left">
                             <p class="text-[10px] text-green-100">আপনার ৭ সংখ্যার রেফার আইডি:</p>
@@ -433,7 +424,7 @@
                 </div>
             </div>
 
-            <!-- ==================== উইথড্র পেজ ==================== -->
+            <!-- উইথড্র পেজ -->
             <div id="page-withdraw" class="app-page hidden p-5 animate-fade-up">
                 <div class="flex items-center space-x-3 mb-5">
                     <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
@@ -485,26 +476,34 @@
                         উইথড্র রিকোয়েস্ট পাঠান
                     </button>
                 </form>
+
+                <div class="mt-6 pt-5 border-t border-green-100">
+                    <h3 class="text-sm font-extrabold text-gray-800 mb-3 flex items-center">
+                        <i data-lucide="list-checks" class="w-4 h-4 mr-2 text-green-600"></i>
+                        আপনার উইথড্র রিকোয়েস্ট লিস্ট
+                    </h3>
+                    <div id="user-withdraw-list" class="space-y-2.5">
+                        <p class="text-center text-xs text-gray-400 py-4">কোনো উইথড্র রিকোয়েস্ট নেই</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- ==================== সম্পূর্ণ হিস্ট্রি পেজ ==================== -->
+            <!-- সম্পূর্ণ হিস্ট্রি পেজ -->
             <div id="page-history" class="app-page hidden p-5 animate-fade-up">
                 <div class="flex items-center space-x-3 mb-5">
                     <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
                     <h2 class="text-lg font-bold text-gray-800">সম্পূর্ণ ইনকাম ও উইথড্র হিস্ট্রি</h2>
                 </div>
-
                 <div id="history-list-container" class="space-y-3"></div>
             </div>
 
-            <!-- ==================== সেটিংস ও প্রোফাইল পেজ (প্রোফাইল পিকচার বদলানোর সুবিধা) ==================== -->
+            <!-- সেটিংস ও প্রোফাইল পেজ -->
             <div id="page-settings" class="app-page hidden p-5 animate-fade-up">
                 <div class="flex items-center space-x-3 mb-5">
                     <button type="button" onclick="navigateTo('home')" class="p-2 bg-green-50 text-green-700 rounded-xl"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
                     <h2 class="text-lg font-bold text-gray-800">সেটিংস ও সাপোর্ট</h2>
                 </div>
 
-                <!-- প্রোফাইল কার্ড ও ছবি পরিবর্তন বাটন -->
                 <div class="bg-green-50 border border-green-200 rounded-3xl p-4 flex items-center justify-between mb-5 shadow-sm">
                     <div class="flex items-center space-x-3.5">
                         <img id="set-user-avatar" src="https://i.ibb.co.com/kgwJdrnY/20261113-113802.png" class="w-14 h-14 rounded-2xl shadow object-cover bg-white border border-green-300">
@@ -544,7 +543,7 @@
             </div>
         </div>
 
-        <!-- ==================== বটম নেভিগেশন বার ==================== -->
+        <!-- বটম নেভিগেশন বার -->
         <nav id="bottom-nav" class="hidden fixed bottom-0 w-full max-w-[440px] glass-card border-t border-green-100 px-3 py-2.5 flex items-center justify-around z-30 shadow-[0_-4px_15px_rgba(0,0,0,0.05)]">
             <button type="button" onclick="navigateTo('home')" data-nav="home" class="nav-item btn-green-shine text-white px-4 py-2 rounded-xl flex items-center space-x-1.5 text-xs font-bold shadow-sm">
                 <i data-lucide="home" class="w-4 h-4"></i>
@@ -568,7 +567,7 @@
             </button>
         </nav>
 
-        <!-- ==================== স্মার্ট লিংক অ্যাডিস্টা ওয়েবভিউ মডাল ==================== -->
+        <!-- স্মার্ট লিংক অ্যাডিস্টা ওয়েবভিউ মডাল -->
         <div id="ad-viewer-modal" class="hidden fixed inset-0 z-50 flex justify-center bg-black/80 backdrop-blur-sm">
             <div class="w-full max-w-[440px] bg-white h-full flex flex-col">
                 <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-4 py-3 flex items-center justify-between shadow-md shrink-0">
@@ -581,7 +580,6 @@
                             <p class="text-[11px] text-green-100">বাকি সময়: <span id="ad-countdown" class="font-extrabold text-yellow-300 text-sm">15</span> সেকেন্ড</p>
                         </div>
                     </div>
-
                     <button type="button" id="close-ad-btn" onclick="claimAdAndClose()" class="hidden bg-white text-green-700 hover:bg-red-500 hover:text-white w-9 h-9 rounded-full font-extrabold text-lg flex items-center justify-center shadow-lg transition transform hover:scale-110">
                         ✕
                     </button>
@@ -597,7 +595,7 @@
             </div>
         </div>
 
-        <!-- ==================== প্রিমিয়াম উইথড্র সাকসেসফুল পপআপ (তথ্য হাইড ও টিএক্সটি ডাউনলোড) ==================== -->
+        <!-- প্রিমিয়াম উইথড্র সাকসেসফুল পপআপ -->
         <div id="withdraw-success-modal" class="hidden fixed inset-0 z-50 glass-modal flex items-center justify-center p-5">
             <div class="glass-card w-full max-w-[380px] rounded-3xl p-6 text-center shadow-2xl border-2 border-green-300 animate-fade-up">
                 <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg shadow-green-600/40">
@@ -641,7 +639,7 @@
             </div>
         </div>
 
-        <!-- ==================== ফরগেট পিন মডাল ==================== -->
+        <!-- ফরগেট পিন মডাল -->
         <div id="forget-pin-modal" class="hidden fixed inset-0 z-50 glass-modal flex items-center justify-center p-5">
             <div class="glass-card w-full max-w-[370px] rounded-3xl p-6 shadow-2xl animate-fade-up">
                 <h3 class="text-lg font-extrabold text-gray-800">পিন রিসেট করুন</h3>
@@ -665,11 +663,11 @@
 
     </div>
 
-    <!-- Firebase SDK (Module) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+    <!-- Firebase Compat SDK (Syntax Error Free) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBH9xZYOMyexJxxuIMBC3iaSi1c_dLhOag",
             authDomain: "mama-earrings.firebaseapp.com",
@@ -681,10 +679,20 @@
             measurementId: "G-8SFEQ3C6N2"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // ডাইনামিক বেস ইউআরএল যা ব্রাউজার রান করলে অটো ডিটেক্ট হবে
+        async function ensureFirebaseAuth() {
+            try {
+                if (!auth.currentUser) {
+                    await auth.signInAnonymously();
+                }
+            } catch (e) {
+                console.warn("Auth fallback active");
+            }
+        }
+
         const dynamicBaseUrl = window.location.href.split('?')[0];
 
         const DEFAULT_SETTINGS = {
@@ -707,57 +715,14 @@
 
         let appSettings = JSON.parse(localStorage.getItem('mama_admin_settings')) || DEFAULT_SETTINGS;
         let currentUser = JSON.parse(localStorage.getItem('mama_current_user')) || null;
+        let userWithdrawList = JSON.parse(localStorage.getItem('mama_withdraw_requests')) || [];
         let uploadedPhotoBase64 = "";
         let lastWithdrawReceiptData = null;
 
-        window.previewProfilePhoto = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 160;
-                    canvas.height = 160;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, 160, 160);
-                    uploadedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
-                    document.getElementById('reg-photo-preview').src = uploadedPhotoBase64;
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
+        window.addEventListener('DOMContentLoaded', async function() {
+            if (window.lucide) lucide.createIcons();
+            await ensureFirebaseAuth();
 
-        // সেটিংস থেকে প্রোফাইল পিকচার পরিবর্তন
-        window.updateProfilePhoto = (event) => {
-            const file = event.target.files[0];
-            if (!file || !currentUser) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 160;
-                    canvas.height = 160;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, 160, 160);
-                    const photoUrl = canvas.toDataURL('image/jpeg', 0.75);
-                    currentUser.photo = photoUrl;
-                    saveCurrentUser();
-                    updateUserStatsUI();
-                    showToast('প্রোফাইল পিকচার সফলভাবে আপডেট হয়েছে!');
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
-
-        window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-
-            // URL থেকে রেফার প্যারামিটার ডিটেক্ট
             const urlParams = new URLSearchParams(window.location.search);
             const refParam = urlParams.get('ref');
             if (refParam) {
@@ -768,13 +733,23 @@
                 document.getElementById('reg-refer').value = '1234567';
             }
 
-            onSnapshot(doc(db, "mama_earn_config", "global_settings"), (docSnap) => {
-                if (docSnap.exists()) {
-                    appSettings = { ...DEFAULT_SETTINGS, ...docSnap.data() };
+            db.collection("mama_earn_config").doc("global_settings").onSnapshot(function(docSnap) {
+                if (docSnap.exists) {
+                    appSettings = Object.assign({}, DEFAULT_SETTINGS, docSnap.data());
                     localStorage.setItem('mama_admin_settings', JSON.stringify(appSettings));
                     applySettingsToUI();
                 }
-            }, () => {});
+            }, function(err) { console.warn("Config listener fallback:", err); });
+
+            db.collection("mama_earn_withdraws").onSnapshot(function(snap) {
+                const list = [];
+                snap.forEach(function(d) { list.push(d.data()); });
+                if (list.length > 0) {
+                    userWithdrawList = list;
+                    localStorage.setItem('mama_withdraw_requests', JSON.stringify(userWithdrawList));
+                    renderUserWithdraws();
+                }
+            }, function(err) { console.warn("Withdraw listener fallback:", err); });
 
             applySettingsToUI();
 
@@ -783,24 +758,28 @@
                 showMainDashboard();
             }
 
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'mama_admin_settings') {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'mama_admin_settings' && e.newValue) {
                     appSettings = JSON.parse(e.newValue);
                     applySettingsToUI();
+                }
+                if (e.key === 'mama_withdraw_requests' && e.newValue) {
+                    userWithdrawList = JSON.parse(e.newValue) || [];
+                    renderUserWithdraws();
                 }
             });
         });
 
         function listenToUserRealTime(email) {
-            onSnapshot(doc(db, "mama_earn_users", email), (snap) => {
-                if (snap.exists()) {
+            db.collection("mama_earn_users").doc(email).onSnapshot(function(snap) {
+                if (snap.exists) {
                     const liveData = snap.data();
-                    currentUser = { ...currentUser, ...liveData };
+                    currentUser = Object.assign({}, currentUser, liveData);
                     localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
                     checkIfBanned();
                     updateUserStatsUI();
                 }
-            }, () => {});
+            }, function(err) { console.warn("User listener fallback:", err); });
         }
 
         function checkIfBanned() {
@@ -826,14 +805,14 @@
 
             const pmContainer = document.getElementById('payment-methods-container');
             pmContainer.innerHTML = '';
-            (appSettings.paymentMethods || []).forEach((method, idx) => {
+            (appSettings.paymentMethods || []).forEach(function(method, idx) {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = `pm-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition ${idx === 0 ? 'btn-green-shine text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200'}`;
+                btn.className = 'pm-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition ' + (idx === 0 ? 'btn-green-shine text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200');
                 btn.textContent = method;
                 if (idx === 0) document.getElementById('selected-method').value = method;
-                btn.onclick = () => {
-                    document.querySelectorAll('.pm-btn').forEach(b => {
+                btn.onclick = function() {
+                    document.querySelectorAll('.pm-btn').forEach(function(b) {
                         b.className = 'pm-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition bg-gray-50 text-gray-700 border-gray-200';
                     });
                     btn.className = 'pm-btn py-2.5 px-3 rounded-xl border text-xs font-bold transition btn-green-shine text-white border-green-600';
@@ -846,7 +825,7 @@
             if (currentUser) updateUserStatsUI();
         }
 
-        window.switchAuthTab = (tab) => {
+        function switchAuthTab(tab) {
             const loginForm = document.getElementById('login-form');
             const regForm = document.getElementById('register-form');
             const loginBtn = document.getElementById('tab-login-btn');
@@ -863,18 +842,42 @@
                 regBtn.className = 'btn-green-shine text-white py-2.5 rounded-xl font-bold text-sm shadow';
                 loginBtn.className = 'text-green-700 py-2.5 rounded-xl font-bold text-sm transition';
             }
-        };
+        }
 
-        window.clearReferInput = () => {
+        function previewProfilePhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedPhotoBase64 = e.target.result;
+                document.getElementById('reg-photo-preview').src = uploadedPhotoBase64;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateProfilePhoto(event) {
+            const file = event.target.files[0];
+            if (!file || !currentUser) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentUser.photo = e.target.result;
+                saveCurrentUser();
+                updateUserStatsUI();
+                showToast('প্রোফাইল পিকচার পরিবর্তন হয়েছে!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearReferInput() {
             const input = document.getElementById('reg-refer');
             input.value = '';
             input.focus();
             showToast('নতুন ৭ সংখ্যার রেফার আইডি বা লিংক বসান');
-        };
+        }
 
-        // রেজিস্ট্রেশন উইথ ৭ ডিজিট আইডি এবং ৳৫০ বোনাস
-        window.handleRegister = async (e) => {
+        async function handleRegister(e) {
             e.preventDefault();
+            await ensureFirebaseAuth();
             if (!uploadedPhotoBase64) {
                 showToast('অনুগ্রহ করে আপনার প্রোফাইল পিকচার আপলোড করুন!');
                 return;
@@ -887,18 +890,17 @@
             const pin = document.getElementById('reg-pin').value;
             const refInput = document.getElementById('reg-refer').value.trim();
 
-            // ৭ সংখ্যার ইউনিক রেফার আইডি জেনারেট (যেমন: 4892015)
             const referCode = String(Math.floor(1000000 + Math.random() * 9000000));
             const signupBonus = 50.00;
 
             const newUser = {
-                name,
-                phone,
-                email,
-                pass,
-                pin,
+                name: name,
+                phone: phone,
+                email: email,
+                pass: pass,
+                pin: pin,
                 photo: uploadedPhotoBase64,
-                referCode,
+                referCode: referCode,
                 referredBy: refInput || 'None',
                 isBanned: false,
                 balance: signupBonus,
@@ -918,48 +920,51 @@
             };
 
             let allUsers = JSON.parse(localStorage.getItem('mama_all_users')) || [];
-            allUsers = allUsers.filter(u => u.email !== email);
+            allUsers = allUsers.filter(function(u) { return u.email !== email; });
             allUsers.push(newUser);
             localStorage.setItem('mama_all_users', JSON.stringify(allUsers));
             currentUser = newUser;
             localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
 
             try {
-                await setDoc(doc(db, "mama_earn_users", email), newUser);
-            } catch (err) {}
+                await db.collection("mama_earn_users").doc(email).set(newUser);
+            } catch (err) {
+                console.warn("Saved locally, cloud sync pending:", err);
+            }
 
             listenToUserRealTime(email);
             showMainDashboard();
-            // রেজিস্টার করার সাথে সাথে ৳৫০ বোনাসের পপআপ দেখানো
             document.getElementById('signup-bonus-modal').classList.remove('hidden');
-        };
+        }
 
-        window.closeSignupBonusModal = () => {
+        function closeSignupBonusModal() {
             document.getElementById('signup-bonus-modal').classList.add('hidden');
-            // পপআপ কাটার পর টেলিগ্রাম নোটিশ পপআপ দেখানো
             document.getElementById('telegram-notice-modal').classList.remove('hidden');
-        };
+        }
 
-        window.closeTelegramModal = () => {
+        function closeTelegramModal() {
             document.getElementById('telegram-notice-modal').classList.add('hidden');
-        };
+        }
 
-        window.handleLogin = async (e) => {
+        async function handleLogin(e) {
             e.preventDefault();
+            await ensureFirebaseAuth();
             const email = document.getElementById('login-email').value.trim().toLowerCase();
             const pass = document.getElementById('login-pass').value;
 
             let found = null;
             try {
-                const snap = await getDoc(doc(db, "mama_earn_users", email));
-                if (snap.exists() && snap.data().pass === pass) {
+                const snap = await db.collection("mama_earn_users").doc(email).get();
+                if (snap.exists && snap.data().pass === pass) {
                     found = snap.data();
                 }
-            } catch (err) {}
+            } catch (err) {
+                console.warn("Cloud fetch failed, checking local:", err);
+            }
 
             if (!found) {
                 const allUsers = JSON.parse(localStorage.getItem('mama_all_users')) || [];
-                found = allUsers.find(u => u.email === email && u.pass === pass);
+                found = allUsers.find(function(u) { return u.email === email && u.pass === pass; });
             }
 
             if (found) {
@@ -968,12 +973,11 @@
                 listenToUserRealTime(email);
                 showToast('স্বাগতম ' + currentUser.name + '!');
                 showMainDashboard();
-                // লগইন করার পর টেলিগ্রাম নোটিশ পপআপ দেখানো
                 document.getElementById('telegram-notice-modal').classList.remove('hidden');
             } else {
-                showToast('ইমেইল বা পাসওয়ার্ড ভুল হয়েছে!');
+                showToast('ইমেইল বা পাসওয়ার্ড ভুল হয়েছে অথবা একাউন্ট নেই!');
             }
-        };
+        }
 
         function showMainDashboard() {
             document.getElementById('auth-screen').classList.add('hidden');
@@ -986,18 +990,18 @@
         function saveCurrentUser() {
             localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
             let allUsers = JSON.parse(localStorage.getItem('mama_all_users')) || [];
-            const idx = allUsers.findIndex(u => u.email === currentUser.email);
+            const idx = allUsers.findIndex(function(u) { return u.email === currentUser.email; });
             if (idx !== -1) allUsers[idx] = currentUser;
             else allUsers.push(currentUser);
             localStorage.setItem('mama_all_users', JSON.stringify(allUsers));
 
-            setDoc(doc(db, "mama_earn_users", currentUser.email), currentUser).catch(() => {});
+            db.collection("mama_earn_users").doc(currentUser.email).set(currentUser, { merge: true }).catch(function() {});
         }
 
         function updateUserStatsUI() {
             if (!currentUser) return;
             document.getElementById('display-user-name').textContent = currentUser.name;
-            document.getElementById('display-user-id').textContent = `ID: ${currentUser.referCode}`;
+            document.getElementById('display-user-id').textContent = 'ID: ' + currentUser.referCode;
             document.getElementById('display-user-phone').textContent = currentUser.phone || 'Verified';
             document.getElementById('display-refer-id-code').textContent = currentUser.referCode;
             if (currentUser.photo) {
@@ -1006,28 +1010,29 @@
             }
             document.getElementById('set-user-name').textContent = currentUser.name;
             document.getElementById('set-user-email').textContent = currentUser.email;
-            document.getElementById('set-user-id').textContent = `ID: ${currentUser.referCode}`;
+            document.getElementById('set-user-id').textContent = 'ID: ' + currentUser.referCode;
             document.getElementById('display-balance').textContent = Number(currentUser.balance).toFixed(2);
             document.getElementById('withdraw-bal-display').textContent = Number(currentUser.balance).toFixed(2);
             document.getElementById('today-ads-count').textContent = currentUser.todayAds;
             document.getElementById('display-refer-earn').textContent = Number(currentUser.referEarn).toFixed(2);
             document.getElementById('total-refer-income').textContent = Number(currentUser.referEarn).toFixed(2);
             document.getElementById('total-refer-count').textContent = currentUser.referCount;
-            document.getElementById('remaining-spins').textContent = currentUser.spinsLeft ?? 10;
+            document.getElementById('remaining-spins').textContent = currentUser.spinsLeft !== undefined ? currentUser.spinsLeft : 10;
 
             const baseUrl = appSettings.baseWebsiteUrl || window.location.href.split('?')[0];
             const separator = baseUrl.includes('?') ? '&' : '?';
-            document.getElementById('my-referral-link').value = `${baseUrl}${separator}ref=${currentUser.referCode}`;
+            document.getElementById('my-referral-link').value = baseUrl + separator + 'ref=' + currentUser.referCode;
 
             renderHistory();
+            renderUserWithdraws();
         }
 
-        window.navigateTo = (pageId) => {
-            document.querySelectorAll('.app-page').forEach(p => p.classList.add('hidden'));
+        function navigateTo(pageId) {
+            document.querySelectorAll('.app-page').forEach(function(p) { p.classList.add('hidden'); });
             const target = document.getElementById('page-' + pageId);
             if (target) target.classList.remove('hidden');
 
-            document.querySelectorAll('.nav-item').forEach(btn => {
+            document.querySelectorAll('.nav-item').forEach(function(btn) {
                 const isTarget = btn.getAttribute('data-nav') === pageId;
                 if (isTarget) {
                     btn.className = 'nav-item btn-green-shine text-white px-4 py-2 rounded-xl flex items-center space-x-1.5 text-xs font-bold shadow-sm';
@@ -1036,11 +1041,10 @@
                 }
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
+        }
 
-        // 스마트 লিংক অ্যাডিস্টা ওয়েবভিউ ও টাইমার
         let adTimerInterval;
-        window.openAdViewer = () => {
+        function openAdViewer() {
             if (currentUser.todayAds >= Number(appSettings.dailyAdLimit)) {
                 showToast('আজকের দৈনিক অ্যাড লিমিট শেষ হয়ে গেছে!');
                 return;
@@ -1057,6 +1061,7 @@
             let remaining = totalSeconds;
 
             closeBtn.classList.add('hidden');
+            closeBtn.onclick = claimAdAndClose;
             countdownEl.textContent = remaining;
             progressBar.style.width = '0%';
             statusEl.textContent = 'স্মার্ট অ্যাড চলছে, অপেক্ষা করুন...';
@@ -1065,11 +1070,11 @@
             modal.classList.remove('hidden');
 
             clearInterval(adTimerInterval);
-            adTimerInterval = setInterval(() => {
+            adTimerInterval = setInterval(function() {
                 remaining--;
                 countdownEl.textContent = remaining > 0 ? remaining : 0;
                 const pct = ((totalSeconds - remaining) / totalSeconds) * 100;
-                progressBar.style.width = `${pct}%`;
+                progressBar.style.width = pct + '%';
 
                 if (remaining <= 0) {
                     clearInterval(adTimerInterval);
@@ -1077,9 +1082,9 @@
                     closeBtn.classList.remove('hidden');
                 }
             }, 1000);
-        };
+        }
 
-        window.claimAdAndClose = () => {
+        function claimAdAndClose() {
             clearInterval(adTimerInterval);
             document.getElementById('smart-link-iframe').src = 'about:blank';
             document.getElementById('ad-viewer-modal').classList.add('hidden');
@@ -1096,10 +1101,9 @@
 
             saveCurrentUser();
             updateUserStatsUI();
-            showToast(`অভিনন্দন! আপনার ব্যালেন্সে +৳${reward.toFixed(2)} যোগ হয়েছে!`);
-        };
+            showToast('অভিনন্দন! আপনার ব্যালেন্সে +৳' + reward.toFixed(2) + ' যোগ হয়েছে!');
+        }
 
-        // লাকি স্পিন হুইল (স্পিন করার পর পর অটো অ্যাড আসবে, কোনো ব্যালেন্স যোগ হবে না অটো অ্যাডে)
         let currentWheelRotation = 0;
         let isSpinning = false;
 
@@ -1130,12 +1134,12 @@
                 ctx.textAlign = 'right';
                 ctx.fillStyle = (i % 2 === 0) ? '#ffffff' : '#14532d';
                 ctx.font = 'bold 14px Inter, sans-serif';
-                ctx.fillText(`৳${prizes[i]}`, 108, 5);
+                ctx.fillText('৳' + prizes[i], 108, 5);
                 ctx.restore();
             }
         }
 
-        window.startSpin = () => {
+        function startSpin() {
             if (isSpinning) return;
             if (currentUser.spinsLeft <= 0) {
                 showToast('আজকের সব স্পিন শেষ হয়ে গেছে!');
@@ -1152,9 +1156,9 @@
             currentWheelRotation += extraSpins + targetAngle - (currentWheelRotation % 360);
 
             const canvas = document.getElementById('spin-canvas');
-            canvas.style.transform = `rotate(${currentWheelRotation}deg)`;
+            canvas.style.transform = 'rotate(' + currentWheelRotation + 'deg)';
 
-            setTimeout(() => {
+            setTimeout(function() {
                 isSpinning = false;
                 const wonAmount = Number(prizes[winIdx]);
                 currentUser.spinsLeft -= 1;
@@ -1168,16 +1172,14 @@
 
                 saveCurrentUser();
                 updateUserStatsUI();
-                showToast(`দারুণ! স্পিন করে জিতেছেন ৳${wonAmount.toFixed(2)}!`);
+                showToast('দারুণ! স্পিন করে জিতেছেন ৳' + wonAmount.toFixed(2) + '!');
 
-                // স্পিনের পর পর অটোমেটিক অ্যাড ওপেন হবে (কোনো ব্যালেন্স যোগ হবে না এই অটো অ্যাডে, শুধু ভিউ)
-                setTimeout(() => {
+                setTimeout(function() {
                     openAutoInterstitialAd();
                 }, 800);
             }, 4100);
-        };
+        }
 
-        // স্পিনের পর অটো অ্যাড (যেটি কেটে দিলে কোনো ব্যালেন্স যোগ হবে না)
         function openAutoInterstitialAd() {
             const modal = document.getElementById('ad-viewer-modal');
             const iframe = document.getElementById('smart-link-iframe');
@@ -1196,43 +1198,41 @@
             modal.classList.remove('hidden');
 
             clearInterval(adTimerInterval);
-            adTimerInterval = setInterval(() => {
+            adTimerInterval = setInterval(function() {
                 remaining--;
                 countdownEl.textContent = remaining > 0 ? remaining : 0;
-                progressBar.style.width = `${(5 - remaining) / 5 * 100}%`;
+                progressBar.style.width = ((5 - remaining) / 5 * 100) + '%';
 
                 if (remaining <= 0) {
                     clearInterval(adTimerInterval);
                     statusEl.textContent = 'অ্যাড সম্পন্ন! ক্লোজ (✕) করুন';
                     closeBtn.classList.remove('hidden');
-                    // কাস্টম ক্লোজ ফাংশন যা শুধু অ্যাড বন্ধ করবে, কোনো টাকা যোগ করবে না
-                    closeBtn.onclick = () => {
+                    closeBtn.onclick = function() {
                         clearInterval(adTimerInterval);
                         iframe.src = 'about:blank';
                         modal.classList.add('hidden');
-                        // আগের অরিজিনাল ক্লোজ বাটন ফাংশন রি-অ্যাসাইন
                         closeBtn.onclick = claimAdAndClose;
                     };
                 }
             }, 1000);
         }
 
-        window.copyReferIdOnly = () => {
+        function copyReferIdOnly() {
             navigator.clipboard.writeText(currentUser.referCode);
             showToast('৭ সংখ্যার রেফার আইডি কপি হয়েছে!');
-        };
+        }
 
-        window.copyReferralLink = () => {
+        function copyReferralLink() {
             const input = document.getElementById('my-referral-link');
             input.select();
             input.setSelectionRange(0, 99999);
             document.execCommand('copy');
             showToast('রেফার লিংক কপি হয়েছে!');
-        };
+        }
 
-        // উইথড্র সাবমিট ও তথ্য হাইড করা
-        window.handleWithdrawSubmit = (e) => {
+        async function handleWithdrawSubmit(e) {
             e.preventDefault();
+            await ensureFirebaseAuth();
             const method = document.getElementById('selected-method').value;
             const number = document.getElementById('wd-number').value.trim();
             const email = document.getElementById('wd-email').value.trim();
@@ -1244,7 +1244,7 @@
                 return;
             }
             if (amount < Number(appSettings.minWithdraw)) {
-                showToast(`সর্বনিম্ন উইথড্র ৳${appSettings.minWithdraw} টাকা!`);
+                showToast('সর্বনিম্ন উইথড্র ৳' + appSettings.minWithdraw + ' টাকা!');
                 return;
             }
             if (amount > Number(currentUser.balance)) {
@@ -1257,10 +1257,10 @@
                 id: 'WD' + Date.now(),
                 userName: currentUser.name,
                 userEmail: currentUser.email,
-                method,
-                number,
-                email,
-                amount,
+                method: method,
+                number: number,
+                email: email,
+                amount: amount,
                 status: 'Pending',
                 date: new Date().toLocaleString('bn-BD')
             };
@@ -1268,7 +1268,7 @@
             lastWithdrawReceiptData = wdRecord;
 
             currentUser.history.unshift({
-                title: `উইথড্র (${method})`,
+                title: 'উইথড্র (' + method + ')',
                 amount: amount,
                 type: 'debit',
                 date: wdRecord.date
@@ -1276,53 +1276,57 @@
 
             let allWithdraws = JSON.parse(localStorage.getItem('mama_withdraw_requests')) || [];
             allWithdraws.unshift(wdRecord);
+            userWithdrawList = allWithdraws;
             localStorage.setItem('mama_withdraw_requests', JSON.stringify(allWithdraws));
 
-            setDoc(doc(db, "mama_earn_withdraws", wdRecord.id), wdRecord).catch(() => {});
+            try {
+                await db.collection("mama_earn_withdraws").doc(wdRecord.id).set(wdRecord);
+            } catch (err) {
+                console.warn("Withdraw cloud write fallback:", err);
+            }
 
             saveCurrentUser();
             updateUserStatsUI();
+            renderUserWithdraws();
 
-            // পপআপে নাম্বার হাইড করে দেখানো (যেমন: 017••••••••)
             const maskedNumber = number.length > 4 ? number.substring(0, 3) + '••••••••' : '••••••••';
             document.getElementById('pop-username').textContent = currentUser.name;
             document.getElementById('pop-method').textContent = method;
             document.getElementById('pop-number').textContent = maskedNumber;
-            document.getElementById('pop-amount').textContent = `৳ ${amount.toFixed(2)}`;
+            document.getElementById('pop-amount').textContent = '৳ ' + amount.toFixed(2);
             document.getElementById('pop-status-badge').textContent = 'Pending';
             document.getElementById('pop-status-badge').className = 'bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold';
 
             document.getElementById('withdraw-success-modal').classList.remove('hidden');
             e.target.reset();
-        };
+        }
 
-        // টিএক্সটি ফাইলে উইথড্র ইনফরমেশন ডাউনলোড
-        window.downloadWithdrawTxtReceipt = () => {
+        function downloadWithdrawTxtReceipt() {
             if (!lastWithdrawReceiptData) return;
             const r = lastWithdrawReceiptData;
-            const content = `=====================================\n  MAMA EARN - WITHDRAW RECEIPT SLIP\n=====================================\nTransaction ID: ${r.id}\nUser Name: ${r.userName}\nUser Email: ${r.userEmail}\nPayment Method: ${r.method}\nAccount Number: ${r.number}\nAmount: BDT ${r.amount.toFixed(2)}\nStatus: ${r.status}\nDate & Time: ${r.date}\n=====================================\nThank you for using MAMA EARN!`;
+            const content = '=====================================\n  MAMA EARN - WITHDRAW RECEIPT SLIP\n=====================================\nTransaction ID: ' + r.id + '\nUser Name: ' + r.userName + '\nUser Email: ' + r.userEmail + '\nPayment Method: ' + r.method + '\nAccount Number: ' + r.number + '\nAmount: BDT ' + r.amount.toFixed(2) + '\nStatus: ' + r.status + '\nDate & Time: ' + r.date + '\n=====================================\nThank you for using MAMA EARN!';
 
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `MAMA_EARN_Receipt_${r.id}.txt`;
+            a.download = 'MAMA_EARN_Receipt_' + r.id + '.txt';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast('রসিদ সফলভাবে ডাউনলোড হয়েছে!');
-        };
+        }
 
-        window.closeWithdrawSuccessModal = () => {
+        function closeWithdrawSuccessModal() {
             document.getElementById('withdraw-success-modal').classList.add('hidden');
             navigateTo('home');
-        };
+        }
 
-        window.openForgetPinModal = () => document.getElementById('forget-pin-modal').classList.remove('hidden');
-        window.closeForgetPinModal = () => document.getElementById('forget-pin-modal').classList.add('hidden');
+        function openForgetPinModal() { document.getElementById('forget-pin-modal').classList.remove('hidden'); }
+        function closeForgetPinModal() { document.getElementById('forget-pin-modal').classList.add('hidden'); }
 
-        window.handleResetPin = (e) => {
+        function handleResetPin(e) {
             e.preventDefault();
             const email = document.getElementById('reset-pin-email').value.trim().toLowerCase();
             const newPin = document.getElementById('reset-pin-new').value;
@@ -1334,9 +1338,9 @@
             saveCurrentUser();
             closeForgetPinModal();
             showToast('নতুন ৪ সংখ্যার পিন সফলভাবে সেট হয়েছে!');
-        };
+        }
 
-        window.handleChangePassword = (e) => {
+        function handleChangePassword(e) {
             e.preventDefault();
             const oldP = document.getElementById('old-pass').value;
             const newP = document.getElementById('new-pass').value;
@@ -1348,20 +1352,20 @@
             saveCurrentUser();
             e.target.reset();
             showToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!');
-        };
+        }
 
-        window.handleUpdatePin = (e) => {
+        function handleUpdatePin(e) {
             e.preventDefault();
             currentUser.pin = document.getElementById('update-pin-input').value;
             saveCurrentUser();
             e.target.reset();
             showToast('উইথড্র পিন আপডেট হয়েছে!');
-        };
+        }
 
-        window.logoutUser = () => {
+        function logoutUser() {
             localStorage.removeItem('mama_current_user');
             location.reload();
-        };
+        }
 
         function renderHistory() {
             const container = document.getElementById('history-list-container');
@@ -1369,36 +1373,62 @@
                 container.innerHTML = '<p class="text-center text-xs text-gray-400 py-8">কোনো লেনদেনের তথ্য নেই</p>';
                 return;
             }
-            container.innerHTML = currentUser.history.map(item => `
-                <div class="bg-white border border-gray-100 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl ${item.type === 'credit' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'} flex items-center justify-center font-bold">
-                            ${item.type === 'credit' ? '+' : '-'}
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-800">${item.title}</p>
-                            <p class="text-[10px] text-gray-400">${item.date}</p>
-                        </div>
-                    </div>
-                    <span class="text-xs font-extrabold ${item.type === 'credit' ? 'text-green-600' : 'text-red-600'}">
-                        ${item.type === 'credit' ? '+' : '-'} ৳${Number(item.amount).toFixed(2)}
-                    </span>
-                </div>
-            `).join('');
+            container.innerHTML = currentUser.history.map(function(item) {
+                return '<div class="bg-white border border-gray-100 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">' +
+                    '<div class="flex items-center space-x-3">' +
+                        '<div class="w-9 h-9 rounded-xl ' + (item.type === 'credit' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600') + ' flex items-center justify-center font-bold">' +
+                            (item.type === 'credit' ? '+' : '-') +
+                        '</div>' +
+                        '<div>' +
+                            '<p class="text-xs font-bold text-gray-800">' + item.title + '</p>' +
+                            '<p class="text-[10px] text-gray-400">' + item.date + '</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<span class="text-xs font-extrabold ' + (item.type === 'credit' ? 'text-green-600' : 'text-red-600') + '">' +
+                        (item.type === 'credit' ? '+' : '-') + ' ৳' + Number(item.amount).toFixed(2) +
+                    '</span>' +
+                '</div>';
+            }).join('');
+        }
+
+        function renderUserWithdraws() {
+            const container = document.getElementById('user-withdraw-list');
+            if (!container || !currentUser) return;
+            const myWds = userWithdrawList.filter(function(w) { return w.userEmail === currentUser.email; });
+            if (myWds.length === 0) {
+                container.innerHTML = '<p class="text-center text-xs text-gray-400 py-4">কোনো উইথড্র রিকোয়েস্ট নেই</p>';
+                return;
+            }
+            container.innerHTML = myWds.map(function(w) {
+                const isApproved = w.status === 'Paid' || w.status === 'Approved';
+                const masked = w.number && w.number.length > 4 ? w.number.substring(0, 3) + '••••••••' : '••••••••';
+                return '<div class="bg-white border border-green-100 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">' +
+                    '<div>' +
+                        '<p class="text-xs font-extrabold text-gray-800">' + w.method + ' • <span class="font-mono text-gray-600">' + masked + '</span></p>' +
+                        '<p class="text-[10px] text-gray-400 mt-0.5">' + w.date + '</p>' +
+                    '</div>' +
+                    '<div class="text-right">' +
+                        '<p class="text-sm font-extrabold text-green-700">৳' + Number(w.amount).toFixed(2) + '</p>' +
+                        '<span class="inline-block mt-0.5 px-3 py-0.5 rounded-full text-[11px] font-extrabold tracking-wide ' + (isApproved ? 'bg-green-600 text-white shadow-sm' : 'bg-amber-100 text-amber-800') + '">' +
+                            (isApproved ? 'APPROVED' : 'PENDING') +
+                        '</span>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
         }
 
         let toastTimeout;
-        window.showToast = (msg) => {
+        function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').textContent = msg;
             toast.classList.remove('opacity-0');
             toast.classList.add('opacity-100');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
+            toastTimeout = setTimeout(function() {
                 toast.classList.remove('opacity-100');
                 toast.classList.add('opacity-0');
             }, 2600);
-        };
+        }
     </script>
 </body>
 </html>

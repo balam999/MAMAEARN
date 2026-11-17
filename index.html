@@ -204,7 +204,7 @@
                     <div>
                         <div class="flex justify-between items-center ml-1">
                             <label class="text-xs font-bold text-gray-600">৭ সংখ্যার রেফার আইডি / লিংক</label>
-                            <button type="button" onclick="clearReferInput()" class="text-[11px] text-red-500 font-semibold hover:underline">কেটে নতুন বসান</button>
+                            <button type="button" id="clear-refer-btn" onclick="clearReferInput()" class="text-[11px] text-red-500 font-semibold hover:underline">কেটে নতুন বসান</button>
                         </div>
                         <div class="relative mt-1">
                             <i data-lucide="link" class="w-4 h-4 text-green-600 absolute left-3.5 top-3"></i>
@@ -669,15 +669,15 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyBH9xZYOMyexJxxuIMBC3iaSi1c_dLhOag",
-            authDomain: "mama-earrings.firebaseapp.com",
-            databaseURL: "https://mama-earrings-default-rtdb.firebaseio.com",
-            projectId: "mama-earrings",
-            storageBucket: "mama-earrings.firebasestorage.app",
-            messagingSenderId: "572659666027",
-            appId: "1:572659666027:web:9b7d8692c6252307f1752e",
-            measurementId: "G-8SFEQ3C6N2"
-        };
+  apiKey: "AIzaSyBH9xZYOMyexJxxuIMBC3iaSi1c_dLhOag",
+  authDomain: "mama-earrings.firebaseapp.com",
+  databaseURL: "https://mama-earrings-default-rtdb.firebaseio.com",
+  projectId: "mama-earrings",
+  storageBucket: "mama-earrings.firebasestorage.app",
+  messagingSenderId: "572659666027",
+  appId: "1:572659666027:web:335ba2e08efeca93f1752e",
+  measurementId: "G-F5L574QNSZ"
+};
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -693,7 +693,13 @@
             }
         }
 
-        const dynamicBaseUrl = window.location.href.split('?')[0];
+        function getAutoWebsiteBaseUrl() {
+            return window.location.origin && window.location.origin !== 'null'
+                ? window.location.origin + window.location.pathname
+                : window.location.href.split('?')[0].split('#')[0];
+        }
+
+        const dynamicBaseUrl = getAutoWebsiteBaseUrl();
 
         const DEFAULT_SETTINGS = {
             appName: "MAMA EARN",
@@ -718,17 +724,49 @@
         let userWithdrawList = JSON.parse(localStorage.getItem('mama_withdraw_requests')) || [];
         let uploadedPhotoBase64 = "";
         let lastWithdrawReceiptData = null;
+        let isReferLockedByLink = false;
+
+        function extractCleanReferId(rawRef) {
+            if (!rawRef) return '';
+            const val = String(rawRef).trim();
+            if (val.includes('ref=')) {
+                try {
+                    const urlObj = new URL(val.startsWith('http') ? val : 'https://example.com/?' + val.split('?').pop());
+                    const extracted = urlObj.searchParams.get('ref');
+                    if (extracted) return extracted.trim();
+                } catch (e) {}
+            }
+            const sevenDigitMatch = val.match(/\b\d{7}\b/);
+            return sevenDigitMatch ? sevenDigitMatch[0] : val;
+        }
+
+        function lockReferralField(refId) {
+            const referInput = document.getElementById('reg-refer');
+            const clearBtn = document.getElementById('clear-refer-btn');
+            if (!referInput) return;
+
+            isReferLockedByLink = true;
+            referInput.value = refId;
+            referInput.readOnly = true;
+            referInput.setAttribute('readonly', 'readonly');
+            referInput.classList.add('bg-green-100', 'cursor-not-allowed', 'font-extrabold', 'border-green-500');
+            if (clearBtn) clearBtn.classList.add('hidden');
+        }
 
         window.addEventListener('DOMContentLoaded', async function() {
             if (window.lucide) lucide.createIcons();
             await ensureFirebaseAuth();
 
             const urlParams = new URLSearchParams(window.location.search);
-            const refParam = urlParams.get('ref');
+            const hashQuery = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
+            const hashParams = new URLSearchParams(hashQuery);
+            const rawRefParam = urlParams.get('ref') || urlParams.get('refer') || hashParams.get('ref');
+            const refParam = extractCleanReferId(rawRefParam);
+
             if (refParam) {
                 switchAuthTab('register');
-                document.getElementById('reg-refer').value = refParam;
-                showToast('রেফার আইডি অটোমেটিক যুক্ত হয়েছে!');
+                lockReferralField(refParam);
+                showToast('রেফার আইডি (' + refParam + ') অটোমেটিক সেট ও লক হয়েছে!');
             } else {
                 document.getElementById('reg-refer').value = '1234567';
             }
@@ -754,6 +792,7 @@
             applySettingsToUI();
 
             if (currentUser) {
+                await ensureUserReferCodeSaved(currentUser);
                 listenToUserRealTime(currentUser.email);
                 showMainDashboard();
             }
@@ -870,9 +909,131 @@
 
         function clearReferInput() {
             const input = document.getElementById('reg-refer');
+            if (isReferLockedByLink || input.readOnly) {
+                showToast('রেফার লিংক থেকে আসা আইডি পরিবর্তন করা যাবে না!');
+                return;
+            }
             input.value = '';
             input.focus();
             showToast('নতুন ৭ সংখ্যার রেফার আইডি বা লিংক বসান');
+        }
+
+        async function generateUniqueReferCode() {
+            let code = String(Math.floor(1000000 + Math.random() * 9000000));
+            try {
+                for (let i = 0; i < 8; i++) {
+                    const refDoc = await db.collection("mama_earn_referrals").doc(code).get();
+                    const checkSnap = await db.collection("mama_earn_users").where("referCode", "==", code).limit(1).get();
+                    if (!refDoc.exists && checkSnap.empty) break;
+                    code = String(Math.floor(1000000 + Math.random() * 9000000));
+                }
+            } catch (e) {}
+            return code;
+        }
+
+        async function saveReferCodeMappingToFirebase(referCode, email, name) {
+            if (!referCode || !email) return;
+            try {
+                await db.collection("mama_earn_referrals").doc(String(referCode)).set({
+                    referCode: String(referCode),
+                    email: email,
+                    name: name || '',
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+            } catch (e) {
+                console.warn("Referral index sync fallback:", e);
+            }
+        }
+
+        async function ensureUserReferCodeSaved(userObj) {
+            if (!userObj || !userObj.email) return userObj;
+            if (!userObj.referCode || String(userObj.referCode).length < 5) {
+                userObj.referCode = await generateUniqueReferCode();
+            }
+            try {
+                await db.collection("mama_earn_users").doc(userObj.email).set({
+                    referCode: String(userObj.referCode)
+                }, { merge: true });
+                await saveReferCodeMappingToFirebase(userObj.referCode, userObj.email, userObj.name);
+            } catch (e) {}
+            localStorage.setItem('mama_current_user', JSON.stringify(userObj));
+            return userObj;
+        }
+
+        async function rewardReferrerUser(cleanReferCode, newUserName, newUserEmail) {
+            const targetCode = String(cleanReferCode || '').trim();
+            if (!targetCode || targetCode === 'None' || targetCode === '1234567') return false;
+
+            const bonusAmt = Number(appSettings.referReward) || 25.00;
+            const nowStr = new Date().toLocaleString('bn-BD');
+            let creditedInCloud = false;
+
+            try {
+                let referrerDocRef = null;
+
+                const mapDoc = await db.collection("mama_earn_referrals").doc(targetCode).get();
+                if (mapDoc.exists && mapDoc.data().email) {
+                    referrerDocRef = db.collection("mama_earn_users").doc(mapDoc.data().email);
+                } else {
+                    const refSnap = await db.collection("mama_earn_users").where("referCode", "==", targetCode).limit(1).get();
+                    if (!refSnap.empty) {
+                        referrerDocRef = refSnap.docs[0].ref;
+                    } else {
+                        const numCode = Number(targetCode);
+                        if (!isNaN(numCode)) {
+                            const numSnap = await db.collection("mama_earn_users").where("referCode", "==", numCode).limit(1).get();
+                            if (!numSnap.empty) {
+                                referrerDocRef = numSnap.docs[0].ref;
+                            }
+                        }
+                    }
+                }
+
+                if (referrerDocRef) {
+                    await db.runTransaction(async function(transaction) {
+                        const snap = await transaction.get(referrerDocRef);
+                        if (!snap.exists) return;
+                        const refData = snap.data();
+                        if (refData.email === newUserEmail) return;
+
+                        const updatedHistory = Array.isArray(refData.history) ? refData.history.slice() : [];
+                        updatedHistory.unshift({
+                            title: 'রেফার বোনাস (' + newUserName + ')',
+                            amount: bonusAmt,
+                            type: 'credit',
+                            date: nowStr
+                        });
+
+                        transaction.update(referrerDocRef, {
+                            balance: Number(refData.balance || 0) + bonusAmt,
+                            referEarn: Number(refData.referEarn || 0) + bonusAmt,
+                            referCount: Number(refData.referCount || 0) + 1,
+                            history: updatedHistory
+                        });
+                        creditedInCloud = true;
+                    });
+                }
+            } catch (err) {
+                console.warn("Cloud referrer reward fallback:", err);
+            }
+
+            let allUsers = JSON.parse(localStorage.getItem('mama_all_users')) || [];
+            const rIdx = allUsers.findIndex(function(u) { return String(u.referCode) === targetCode && u.email !== newUserEmail; });
+            if (rIdx !== -1) {
+                allUsers[rIdx].balance = Number(allUsers[rIdx].balance || 0) + bonusAmt;
+                allUsers[rIdx].referEarn = Number(allUsers[rIdx].referEarn || 0) + bonusAmt;
+                allUsers[rIdx].referCount = Number(allUsers[rIdx].referCount || 0) + 1;
+                allUsers[rIdx].history = allUsers[rIdx].history || [];
+                allUsers[rIdx].history.unshift({
+                    title: 'রেফার বোনাস (' + newUserName + ')',
+                    amount: bonusAmt,
+                    type: 'credit',
+                    date: nowStr
+                });
+                localStorage.setItem('mama_all_users', JSON.stringify(allUsers));
+            }
+
+            return creditedInCloud;
         }
 
         async function handleRegister(e) {
@@ -888,9 +1049,10 @@
             const email = document.getElementById('reg-email').value.trim().toLowerCase();
             const pass = document.getElementById('reg-pass').value;
             const pin = document.getElementById('reg-pin').value;
-            const refInput = document.getElementById('reg-refer').value.trim();
+            const rawRefInput = document.getElementById('reg-refer').value.trim();
+            const cleanRefCode = extractCleanReferId(rawRefInput);
 
-            const referCode = String(Math.floor(1000000 + Math.random() * 9000000));
+            const referCode = await generateUniqueReferCode();
             const signupBonus = 50.00;
 
             const newUser = {
@@ -901,7 +1063,7 @@
                 pin: pin,
                 photo: uploadedPhotoBase64,
                 referCode: referCode,
-                referredBy: refInput || 'None',
+                referredBy: cleanRefCode || 'None',
                 isBanned: false,
                 balance: signupBonus,
                 referEarn: 0,
@@ -928,8 +1090,13 @@
 
             try {
                 await db.collection("mama_earn_users").doc(email).set(newUser);
+                await saveReferCodeMappingToFirebase(referCode, email, name);
             } catch (err) {
                 console.warn("Saved locally, cloud sync pending:", err);
+            }
+
+            if (cleanRefCode && cleanRefCode !== referCode) {
+                await rewardReferrerUser(cleanRefCode, name, email);
             }
 
             listenToUserRealTime(email);
@@ -968,7 +1135,7 @@
             }
 
             if (found) {
-                currentUser = found;
+                currentUser = await ensureUserReferCodeSaved(found);
                 localStorage.setItem('mama_current_user', JSON.stringify(currentUser));
                 listenToUserRealTime(email);
                 showToast('স্বাগতম ' + currentUser.name + '!');
@@ -996,6 +1163,9 @@
             localStorage.setItem('mama_all_users', JSON.stringify(allUsers));
 
             db.collection("mama_earn_users").doc(currentUser.email).set(currentUser, { merge: true }).catch(function() {});
+            if (currentUser.referCode) {
+                saveReferCodeMappingToFirebase(currentUser.referCode, currentUser.email, currentUser.name);
+            }
         }
 
         function updateUserStatsUI() {
@@ -1019,7 +1189,8 @@
             document.getElementById('total-refer-count').textContent = currentUser.referCount;
             document.getElementById('remaining-spins').textContent = currentUser.spinsLeft !== undefined ? currentUser.spinsLeft : 10;
 
-            const baseUrl = appSettings.baseWebsiteUrl || window.location.href.split('?')[0];
+            const autoSiteUrl = getAutoWebsiteBaseUrl();
+            const baseUrl = (autoSiteUrl && !autoSiteUrl.startsWith('file:')) ? autoSiteUrl : (appSettings.baseWebsiteUrl || autoSiteUrl);
             const separator = baseUrl.includes('?') ? '&' : '?';
             document.getElementById('my-referral-link').value = baseUrl + separator + 'ref=' + currentUser.referCode;
 
